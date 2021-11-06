@@ -182,7 +182,7 @@ class _NinShow1State extends State<NinShow1> {
                               width: MediaQuery.of(context).size.width * 0.8,
                               child: Center(
                                 child: Text(
-                                  '新規登録',
+                                  'ログイン',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
