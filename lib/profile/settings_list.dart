@@ -17,7 +17,7 @@ class SettingList extends StatefulWidget {
 }
 
 class _SettingListState extends State<SettingList> {
-  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'お問い合わせ', '本人・年齢確認', 'ご意見箱'];
+  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'ご意見箱', 'お問い合わせ', '本人・年齢確認'];
   late final a;
   late String m = '0';
 
