@@ -77,7 +77,7 @@ class _SettingListState extends State<SettingList> {
                         : null;
                   },
                   child: Text(
-                    '利用規約',
+                    '設定',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
