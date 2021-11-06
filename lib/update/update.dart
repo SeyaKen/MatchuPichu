@@ -55,7 +55,7 @@ class _UpdaterState extends State<Updater> {
                  TextButton(
                    child: Text(
                      btnLabel,
-                     style: TextStyle(color: Colors.red),
+                     style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                    ),
                    onPressed: () => _launchURL(appStoreUrl),
                  ),
