@@ -1,0 +1,299 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:machupichu/chat/chatScreen.dart';
+import 'package:machupichu/profile/mibunnshoumei.dart';
+import 'package:machupichu/services/database.dart';
+
+int? notifications = 0;
+
+class chatLists extends StatefulWidget {
+  @override
+  _chatListsState createState() => _chatListsState();
+}
+
+class _chatListsState extends State<chatLists> {
+  Stream<QuerySnapshot<Object?>>? chatRoomsStream;
+  String? myUserUid;
+  late final a;
+  late String m;
+
+  getMyUserUid() async {
+    this.myUserUid = await FirebaseAuth.instance.currentUser!.uid;
+    setState(() {});
+  }
+
+  getChatRooms() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    chatRoomsStream = await DatabaseService(uid).getChatRooms();
+    setState(() {});
+    // setStateがよばれるたびにrebuildされる
+  }
+
+  onScreenLoaded() async {
+    await getMyUserUid();
+    getChatRooms();
+    this.a = FirebaseFirestore.instance.collection("user").doc(myUserUid);
+    try {
+      a.get().then((docSnapshot) => {
+            this.m = docSnapshot.get('kakunin'),
+            setState(() {}),
+          });
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    onScreenLoaded();
+  }
+
+  Widget chatRoomsList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: chatRoomsStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          print(snapshot.error);
+        }
+        return snapshot.hasData
+            ? ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  if (0 == index) {
+                    notifications = 0;
+                  }
+                  DocumentSnapshot ds = snapshot.data!.docs[index];
+                  String uid = FirebaseAuth.instance.currentUser!.uid;
+                  // 相手の名前を代入
+                  String username =
+                      ds.id.replaceAll(uid, '').replaceAll('_', '');
+                  notifications =
+                      (notifications! + ds['${this.myUserUid}midoku']) as int?;
+                  if (index + 1 == snapshot.data!.docs.length) {
+                    DatabaseService(uid).uploadNotification(notifications);
+                    FlutterAppBadger.updateBadgeCount(notifications!);
+                  }
+                  return ChatRoomListTile(
+                    ds['lastMessage'],
+                    ds.id,
+                    this.myUserUid!,
+                    ds['$username'],
+                    ds['sendBy'] == uid
+                        ? ds['${username}You']
+                        : ds['${username}I'],
+                    ds['${this.myUserUid}midoku'],
+                    ds['lastMessageSendTs'],
+                    this.m,
+                  );
+                },
+              )
+            : Container(
+                color: Colors.white,
+              );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Color(0xFFed1b24).withOpacity(0.77),
+            toolbarHeight: 88,
+            elevation: 0,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'トーク',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.33,
+                  ),
+                ],
+              ),
+            )),
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 8,
+              ),
+              chatRoomsList(),
+            ],
+          ),
+        ));
+  }
+}
+
+class ChatRoomListTile extends StatefulWidget {
+  final String lastMessage, chatRoomId, myUserUid, profilePicUrl, name, m;
+  int mido;
+  Timestamp ts;
+  ChatRoomListTile(this.lastMessage, this.chatRoomId, this.myUserUid,
+      this.profilePicUrl, this.name, this.mido, this.ts, this.m);
+
+  @override
+  _ChatRoomListTileState createState() => _ChatRoomListTileState();
+}
+
+class _ChatRoomListTileState extends State<ChatRoomListTile> {
+  String? profilePicUrl = '', name = '', username = '';
+
+  getThisUserInfo() async {
+    username =
+        widget.chatRoomId.replaceAll(widget.myUserUid, '').replaceAll('_', '');
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getThisUserInfo();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30000000),
+                  child: widget.profilePicUrl.isNotEmpty
+                      ? Image.network(
+                          widget.profilePicUrl,
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.width * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                        )
+                      : Container(height: 40, width: 40, color: Colors.grey),
+                ),
+                const SizedBox(width: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.name.length > 10
+                                ? widget.name.substring(0, 10)
+                                : widget.name,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            widget.lastMessage.contains('firebasestorage')
+                                ? '画像を送信しました。'
+                                : widget.lastMessage.length > 15
+                                    ? widget.lastMessage.substring(0, 15) +
+                                        '...'
+                                    : widget.lastMessage,
+                          )
+                        ]),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${widget.ts.toDate().toString().substring(10, 16)}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30000000),
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    color: widget.mido == 0
+                        ? Colors.white
+                        : Color(0xFFed1b24).withOpacity(0.77),
+                    child: Center(
+                        child: Text(
+                      widget.mido == 0 ? '' : widget.mido.toString(),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        if (widget.m == '2') {
+          FirebaseFirestore.instance
+              .collection("chatrooms")
+              .doc(widget.chatRoomId)
+              .update({'${widget.myUserUid}midoku': 0});
+          FlutterAppBadger.updateBadgeCount(notifications! - widget.mido);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => chatScreen(username!, widget.myUserUid,
+                      widget.chatRoomId, widget.name, widget.profilePicUrl)));
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text("いいえ"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoDialogAction(
+                    textStyle: TextStyle(color: Colors.red),
+                    isDefaultAction: true,
+                    child: Text("はい"),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => Mibunnshoumei(),
+                            transitionDuration: Duration(seconds: 0),
+                          ));
+                    },
+                  )
+                ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+              });
+        }
+      },
+    );
+  }
+}

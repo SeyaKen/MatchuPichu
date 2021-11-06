@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "571604063176",
+    "project_id": "machupichu-a5cd2",
+    "storage_bucket": "machupichu-a5cd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571604063176:android:a38f69fa6c740d1c9c26fd",
+        "android_client_info": {
+          "package_name": "com.seyaken.machupichu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571604063176-2mh0q8jd97afct4n8vgnvkpgv4v5oc8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3N3B17Qb_D82SZNNX_u10uNM3xkk-aKs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571604063176-2mh0q8jd97afct4n8vgnvkpgv4v5oc8p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "571604063176-0utqmqm6459a5pgiprighm0j2pt4t5nb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.machupichu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
