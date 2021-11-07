@@ -39,12 +39,14 @@ class _MainPageState extends State<MainPage> {
   onScreenLoaded() async {
     await getMyUserUid();
     getChatRooms();
+    setState(() {});
   }
 
   @override
   void initState() {
-    super.initState();
     onScreenLoaded();
+    setState(() {});
+    super.initState();
   }
 
   @override
@@ -57,6 +59,9 @@ class _MainPageState extends State<MainPage> {
                   bottomNavigationBar: Container(
                     child: BottomNavigationBar(
                       onTap: (index) {
+                        if (index == 2) {
+                          initState();
+                        }
                         setState(() {
                           currenttab = index;
                         });
@@ -145,7 +150,9 @@ class _MainPageState extends State<MainPage> {
                                     size: 30,
                                   ),
                                 ),
-                                snapshot.data!.docs[0]['osirase'] || snapshot.data!.docs[0]['kakuninbool'] ? Positioned(
+                                snapshot.data!.docs[0]['osirase'] ||
+                                        snapshot.data!.docs[0]['kakuninbool']
+                                    ? Positioned(
                                         right: 5,
                                         top: 0,
                                         child: Container(
@@ -166,7 +173,8 @@ class _MainPageState extends State<MainPage> {
                                             ),
                                           ),
                                         ),
-                                      ) : Container(),
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),

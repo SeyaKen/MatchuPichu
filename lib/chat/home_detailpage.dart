@@ -154,7 +154,7 @@ class _HomeDetailState extends State<HomeDetail> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。'));
+                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
                   });
             } else {
               showDialog(

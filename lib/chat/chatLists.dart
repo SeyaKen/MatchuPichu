@@ -18,7 +18,7 @@ class _chatListsState extends State<chatLists> {
   Stream<QuerySnapshot<Object?>>? chatRoomsStream;
   String? myUserUid;
   late final a;
-  late String m;
+  late String m ='0';
 
   getMyUserUid() async {
     this.myUserUid = await FirebaseAuth.instance.currentUser!.uid;
@@ -157,6 +157,7 @@ class ChatRoomListTile extends StatefulWidget {
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
   String? profilePicUrl = '', name = '', username = '';
+  
 
   getThisUserInfo() async {
     username =
@@ -277,7 +278,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。'));
+                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
                   });
             } else {
           showDialog(

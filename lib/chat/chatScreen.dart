@@ -73,10 +73,12 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
             this.m = docSnapshot.get('${widget.chatWithUsername}midoku'),
             this.nyuusitucheck =
                 docSnapshot.get('${widget.chatWithUsername}nyuusitu'),
+            setState(() {})
           });
     } catch (e) {
       this.m = 0;
       this.nyuusitucheck = false;
+      setState(() {});
     }
   }
 
@@ -100,10 +102,12 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
             this.m = docSnapshot.get('${widget.chatWithUsername}midoku'),
             this.nyuusitucheck =
                 docSnapshot.get('${widget.chatWithUsername}nyuusitu'),
+            setState(() {}),
           });
     } catch (e) {
       this.m = 0;
       this.nyuusitucheck = false;
+      setState(() {});
     }
     if (messageTextEdittingController.text != '' && imageurl == '') {
       String message = messageTextEdittingController.text;
