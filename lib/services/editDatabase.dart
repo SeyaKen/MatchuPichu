@@ -184,7 +184,7 @@ class editService extends ChangeNotifier {
       return '';
     }
     final storage = FirebaseStorage.instance;
-    final ref = storage.ref().child(uid);
+    final ref = storage.ref().child('images').child(uid);
 
     final snapshot = await ref.putFile(
       imageFile!,

@@ -173,7 +173,7 @@ class DatabaseService extends ChangeNotifier {
       return '';
     }
     final storage = FirebaseStorage.instance;
-    final ref = storage.ref().child(uid);
+    final ref = storage.ref().child('images').child(uid);
 
     final snapshot = await ref.putFile(
       imageFile!,
@@ -202,7 +202,7 @@ class DatabaseService extends ChangeNotifier {
       return '';
     }
     final storage = FirebaseStorage.instance;
-    final ref = storage.ref().child(randomAlphabet);
+    final ref = storage.ref().child('images').child(randomAlphabet);
 
     final snapshot = await ref.putFile(
       imageFile!,
