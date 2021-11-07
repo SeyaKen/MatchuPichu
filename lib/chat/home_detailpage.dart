@@ -142,7 +142,7 @@ class _HomeDetailState extends State<HomeDetail> {
                     ),
                     transitionDuration: Duration(seconds: 0),
                   ));
-            } else if(this.m == 1) {
+            } else if(this.m == '1') {
               showDialog(
                   context: context,
                   builder: (context) {
@@ -154,7 +154,7 @@ class _HomeDetailState extends State<HomeDetail> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ], title: Text('ただいま審査中です。しばらくお待ちください。'));
+                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。'));
                   });
             } else {
               showDialog(

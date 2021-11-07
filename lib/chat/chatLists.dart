@@ -265,7 +265,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
               MaterialPageRoute(
                   builder: (context) => chatScreen(username!, widget.myUserUid,
                       widget.chatRoomId, widget.name, widget.profilePicUrl)));
-        } else if(widget.m == 1) {
+        } else if(widget.m == '1') {
               showDialog(
                   context: context,
                   builder: (context) {
@@ -277,7 +277,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ], title: Text('ただいま審査中です。しばらくお待ちください。'));
+                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。'));
                   });
             } else {
           showDialog(
