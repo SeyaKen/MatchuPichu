@@ -142,6 +142,20 @@ class _HomeDetailState extends State<HomeDetail> {
                     ),
                     transitionDuration: Duration(seconds: 0),
                   ));
+            } else if(this.m == 1) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CupertinoAlertDialog(actions: [
+                      CupertinoDialogAction(
+                        isDefaultAction: true,
+                        child: const Text("閉じる"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ], title: Text('ただいま審査中です。しばらくお待ちください。'));
+                  });
             } else {
               showDialog(
                   context: context,

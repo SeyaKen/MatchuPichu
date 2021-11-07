@@ -265,7 +265,21 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
               MaterialPageRoute(
                   builder: (context) => chatScreen(username!, widget.myUserUid,
                       widget.chatRoomId, widget.name, widget.profilePicUrl)));
-        } else {
+        } else if(widget.m == 1) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CupertinoAlertDialog(actions: [
+                      CupertinoDialogAction(
+                        isDefaultAction: true,
+                        child: const Text("閉じる"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ], title: Text('ただいま審査中です。しばらくお待ちください。'));
+                  });
+            } else {
           showDialog(
               context: context,
               builder: (context) {
