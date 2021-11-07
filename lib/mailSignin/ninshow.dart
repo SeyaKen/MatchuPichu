@@ -121,10 +121,14 @@ class _NinShowState extends State<NinShow> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 16.0),
-                        child: Text(
-                          '届いたメールアドレスに記載されているコードを入力してください。',
-                          style: TextStyle(color: Colors.black),
-                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(text: 'appautheticator.1', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                              TextSpan(text: 'というメールアドレスから届いたメールアドレスに記載されているコードを入力してください。', style: TextStyle(color: Colors.black)),
+                            ]
+                          )
+                        )
                       ),
                     ),
                     SizedBox(

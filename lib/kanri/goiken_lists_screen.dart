@@ -62,9 +62,8 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
           stream: GoikenListsStream,
           builder: (context, snapshot) {
             print('home_list_pageのsnapshotのエラー');
-            if (snapshot.hasData) {
-              print(snapshot.error);
-            }
+            print(snapshot.hasData);
+            print(snapshot.error);
             return snapshot.hasData
                 ? GridView.count(
                     shrinkWrap: true,
@@ -85,7 +84,9 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
                           child: Container(
                             margin: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xFFed1b24).withOpacity(0.77))),
+                                border: Border.all(
+                                    color:
+                                        Color(0xFFed1b24).withOpacity(0.77))),
                             child: Stack(
                               children: [
                                 Container(
@@ -97,7 +98,8 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
                                 Align(
                                     alignment: Alignment.bottomCenter,
                                     child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(primary: Color(0xFFed1b24)),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Color(0xFFed1b24)),
                                       onPressed: () async {
                                         await FirebaseFirestore.instance
                                             .collection('goiken')

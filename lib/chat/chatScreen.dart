@@ -7,7 +7,8 @@ import 'package:random_string/random_string.dart';
 
 class chatScreen extends StatefulWidget {
   final String chatWithUsername, name, chatRoomId, youName, aitenoURL;
-  chatScreen(this.chatWithUsername, this.name, this.chatRoomId, this.youName, this.aitenoURL);
+  chatScreen(this.chatWithUsername, this.name, this.chatRoomId, this.youName,
+      this.aitenoURL);
 
   @override
   _chatScreenState createState() => _chatScreenState(chatRoomId, aitenoURL);
@@ -98,7 +99,7 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
       this.a.get().then((docSnapshot) => {
             this.m = docSnapshot.get('${widget.chatWithUsername}midoku'),
             this.nyuusitucheck =
-              docSnapshot.get('${widget.chatWithUsername}nyuusitu'),
+                docSnapshot.get('${widget.chatWithUsername}nyuusitu'),
           });
     } catch (e) {
       this.m = 0;
@@ -220,6 +221,7 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
     return StreamBuilder<QuerySnapshot>(
         stream: messageStream,
         builder: (context, snapshot) {
+          print(snapshot.error);
           return snapshot.hasData
               ? ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -408,7 +410,8 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return BlockScreen(widget.youName, widget.chatRoomId, widget.name);
+                        return BlockScreen(
+                            widget.youName, widget.chatRoomId, widget.name);
                       },
                     ),
                   );
@@ -451,7 +454,8 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
                         InkWell(
                           onTap: () async {
                             imageurl = await DatabaseService(widget.name)
-                                .chatUpdateCamera(randomAlphaNumeric(12), context);
+                                .chatUpdateCamera(
+                                    randomAlphaNumeric(12), context);
                             addMessage(true);
                           },
                           child: Icon(
@@ -477,7 +481,8 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
                             width: MediaQuery.of(context).size.width * 0.65,
                             alignment: Alignment.bottomCenter,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
                               color: Colors.grey[200],
                             ),
                             padding: EdgeInsets.symmetric(horizontal: 8),

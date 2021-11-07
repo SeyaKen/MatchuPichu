@@ -47,11 +47,11 @@ class _MyAppState extends State<MyApp> {
               if (widget.hitokoto != null) {
                 return MainPage(0 ,'a', 'a', 'a', 0, 0);
               } else {
-                return mailAuthenticate();
+                return TestAuthenticate();
               }
             },
           ),
-          Updater(appStoreUrl: 'https://apps.apple.com/jp/app/id1589744489?mt=8', playStoreUrl: 'https: //play.google.com/store/apps/details?id=com.seyaken.machupichu',),
+          Updater(appStoreUrl: 'https://apps.apple.com/jp/app/id1594049158?mt=8', playStoreUrl: 'https: //play.google.com/store/apps/details?id=com.seyaken.machupichu',),
         ],
       ),
     );

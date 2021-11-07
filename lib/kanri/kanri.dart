@@ -61,9 +61,7 @@ class _KanriScreenState extends State<KanriScreen> {
           stream: KanriListsStream,
           builder: (context, snapshot) {
             print('home_list_pageのsnapshotのエラー');
-            if (snapshot.hasData) {
-              print(snapshot.error);
-            }
+            print(snapshot.error);
             return snapshot.hasData
                 ? GridView.count(
                     shrinkWrap: true,
@@ -143,7 +141,8 @@ class _KanriScreenState extends State<KanriScreen> {
                                                       .doc(ds.id)
                                                       .update({'kakunin': '3'});
                                                   await FirebaseStorage.instance
-                                                      .refFromURL(ds['imageURL'])
+                                                      .refFromURL(
+                                                          ds['imageURL'])
                                                       .delete();
                                                   await FirebaseFirestore
                                                       .instance
@@ -188,7 +187,8 @@ class _KanriScreenState extends State<KanriScreen> {
                                                             {'kakunin': '2'});
                                                     await FirebaseStorage
                                                         .instance
-                                                        .refFromURL(ds['imageURL'])
+                                                        .refFromURL(
+                                                            ds['imageURL'])
                                                         .delete();
                                                     await FirebaseFirestore
                                                         .instance
