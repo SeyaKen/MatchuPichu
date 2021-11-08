@@ -59,9 +59,6 @@ class _MainPageState extends State<MainPage> {
                   bottomNavigationBar: Container(
                     child: BottomNavigationBar(
                       onTap: (index) {
-                        if (index == 2) {
-                          initState();
-                        }
                         setState(() {
                           currenttab = index;
                         });

@@ -18,7 +18,7 @@ class _chatListsState extends State<chatLists> {
   Stream<QuerySnapshot<Object?>>? chatRoomsStream;
   String? myUserUid;
   late final a;
-  late String m ='0';
+  late String m = '0';
 
   getMyUserUid() async {
     this.myUserUid = await FirebaseAuth.instance.currentUser!.uid;
@@ -91,6 +91,7 @@ class _chatListsState extends State<chatLists> {
                     ds['${this.myUserUid}midoku'],
                     ds['lastMessageSendTs'],
                     this.m,
+                    ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
                   );
                 },
               )
@@ -145,31 +146,32 @@ class _chatListsState extends State<chatLists> {
 }
 
 class ChatRoomListTile extends StatefulWidget {
-  final String lastMessage, chatRoomId, myUserUid, profilePicUrl, name, m;
+  final String lastMessage,
+      chatRoomId,
+      myUserUid,
+      profilePicUrl,
+      name,
+      m,
+      aitenoname;
   int mido;
   Timestamp ts;
-  ChatRoomListTile(this.lastMessage, this.chatRoomId, this.myUserUid,
-      this.profilePicUrl, this.name, this.mido, this.ts, this.m);
+  ChatRoomListTile(
+      this.lastMessage,
+      this.chatRoomId,
+      this.myUserUid,
+      this.profilePicUrl,
+      this.name,
+      this.mido,
+      this.ts,
+      this.m,
+      this.aitenoname);
 
   @override
   _ChatRoomListTileState createState() => _ChatRoomListTileState();
 }
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
-  String? profilePicUrl = '', name = '', username = '';
-  
-
-  getThisUserInfo() async {
-    username =
-        widget.chatRoomId.replaceAll(widget.myUserUid, '').replaceAll('_', '');
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getThisUserInfo();
-  }
+  String? profilePicUrl = '', name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -255,6 +257,8 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         ),
       ),
       onTap: () {
+        print('ああああああああ');
+        print(widget.aitenoname);
         if (widget.m == '2') {
           FirebaseFirestore.instance
               .collection("chatrooms")
@@ -264,13 +268,18 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => chatScreen(username!, widget.myUserUid,
-                      widget.chatRoomId, widget.name, widget.profilePicUrl)));
-        } else if(widget.m == '1') {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return CupertinoAlertDialog(actions: [
+                  builder: (context) => chatScreen(
+                      widget.aitenoname,
+                      widget.myUserUid,
+                      widget.chatRoomId,
+                      widget.name,
+                      widget.profilePicUrl)));
+        } else if (widget.m == '1') {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                    actions: [
                       CupertinoDialogAction(
                         isDefaultAction: true,
                         child: const Text("閉じる"),
@@ -278,9 +287,11 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                           Navigator.of(context).pop();
                         },
                       ),
-                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
-                  });
-            } else {
+                    ],
+                    title: Text(
+                        'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+              });
+        } else {
           showDialog(
               context: context,
               builder: (context) {
