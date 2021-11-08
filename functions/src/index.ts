@@ -22,7 +22,6 @@ export const createNotifications = functions.region('asia-northeast1').firestore
     document("/user/{users}")
     .onUpdate( async (change, context: any) => {
       const doc = change.after.data();
-      console.log(doc['uid']);
       const doccontent = firestore.collection("user").doc(doc['uid']);
       doccontent.get().then(function(docc: { exists: boolean; data: () => any; }){
         const kakuninbool = docc.data()['kakuninbool'];
@@ -31,6 +30,7 @@ export const createNotifications = functions.region('asia-northeast1').firestore
           const fcmToken = doccc.data()['token'];
           if (kakuninbool){
             pushNotification(fcmToken, '本人・年齢確認について', '本人・年齢確認が終了しました。');
+            console.log("成功認証");
           }
         }).catch((error) => {
           console.log("エラー身分証明1:", error);

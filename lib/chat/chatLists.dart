@@ -257,8 +257,6 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         ),
       ),
       onTap: () {
-        print('ああああああああ');
-        print(widget.aitenoname);
         if (widget.m == '2') {
           FirebaseFirestore.instance
               .collection("chatrooms")
