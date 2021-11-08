@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,31 +93,69 @@ class _BlockScreenState extends State<BlockScreen> {
                         ? showDialog(
                             context: context,
                             builder: (context) {
-                              return CupertinoAlertDialog(
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      isDefaultAction: true,
-                                      child: const Text("いいえ"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    CupertinoDialogAction(
-                                      textStyle: TextStyle(color: Colors.red),
-                                      isDefaultAction: true,
-                                      child: Text("はい"),
-                                      onPressed: () async {
-                                        DatabaseService(widget.uid)
-                                            .blockChatRoom(widget.chatRoomId);
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          this.block = !block;
-                                        });
-                                      },
-                                    )
-                                  ],
-                                  title: Text(
-                                      'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'));
+                              return Platform.isIOS
+                                  ? CupertinoAlertDialog(
+                                      actions: [
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            child: const Text("いいえ"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          CupertinoDialogAction(
+                                            textStyle:
+                                                TextStyle(color: Colors.red),
+                                            isDefaultAction: true,
+                                            child: Text("はい"),
+                                            onPressed: () async {
+                                              DatabaseService(widget.uid)
+                                                  .blockChatRoom(
+                                                      widget.chatRoomId);
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                this.block = !block;
+                                              });
+                                            },
+                                          )
+                                        ],
+                                      title: Text(
+                                          'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'))
+                                  : WillPopScope(
+                                      child: new AlertDialog(
+                                        content: Text(
+                                            'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text(
+                                              'いいえ',
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                            ),
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text(
+                                              'はい',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            onPressed: () async {
+                                              DatabaseService(widget.uid)
+                                                  .blockChatRoom(
+                                                      widget.chatRoomId);
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                this.block = !block;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      onWillPop: () async => false,
+                                    );
                             })
                         : setState(() {
                             DatabaseService(widget.uid)
