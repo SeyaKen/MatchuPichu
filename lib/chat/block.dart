@@ -93,8 +93,7 @@ class _BlockScreenState extends State<BlockScreen> {
                         ? showDialog(
                             context: context,
                             builder: (context) {
-                              return Platform.isIOS
-                                  ? CupertinoAlertDialog(
+                              return CupertinoAlertDialog(
                                       actions: [
                                           CupertinoDialogAction(
                                             isDefaultAction: true,
@@ -120,42 +119,7 @@ class _BlockScreenState extends State<BlockScreen> {
                                           )
                                         ],
                                       title: Text(
-                                          'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'))
-                                  : WillPopScope(
-                                      child: new AlertDialog(
-                                        content: Text(
-                                            'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text(
-                                              'いいえ',
-                                              style:
-                                                  TextStyle(color: Colors.blue),
-                                            ),
-                                            onPressed: () async {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text(
-                                              'はい',
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                            onPressed: () async {
-                                              DatabaseService(widget.uid)
-                                                  .blockChatRoom(
-                                                      widget.chatRoomId);
-                                              Navigator.of(context).pop();
-                                              setState(() {
-                                                this.block = !block;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      onWillPop: () async => false,
-                                    );
+                                          'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'));
                             })
                         : setState(() {
                             DatabaseService(widget.uid)
