@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/services/database.dart';
-import 'package:machupichu/services/editDatabase.dart';
 
 class GoikenScreen extends StatefulWidget {
   @override

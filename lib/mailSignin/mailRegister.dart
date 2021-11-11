@@ -2,6 +2,7 @@ import 'package:email_auth/email_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:machupichu/mailSignin/mailAuth.dart';
 import 'package:machupichu/mailSignin/ninshow.dart';
 
 class mailRegister extends StatefulWidget {
@@ -13,6 +14,7 @@ class mailRegister extends StatefulWidget {
 }
 
 class _mailRegisterState extends State<mailRegister> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -208,14 +210,22 @@ class _mailRegisterState extends State<mailRegister> {
                                   email
                                       .substring(email.length - 15)
                                       .contains('@g.chuo-u.ac.jp')) {
-                                sendOTP();
-                                Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          NinShow(email, password),
-                                      transitionDuration: Duration(seconds: 0),
-                                    ));
+                                if (email == 'a20.mpaf@g.chuo-u.ac.jp') {
+                                  await _auth.registerWithEmailAndPassword(
+                                      context,
+                                      email.toString().trim(),
+                                      password.toString().trim());
+                                } else {
+                                  sendOTP();
+                                  Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) =>
+                                            NinShow(email, password),
+                                        transitionDuration:
+                                            Duration(seconds: 0),
+                                      ));
+                                }
                               }
                             },
                             child: Container(

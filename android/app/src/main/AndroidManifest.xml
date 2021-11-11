@@ -2,9 +2,7 @@
     package="com.seyaken.machupichu">
    <application
         android:label="MatchuPichu"
-        android:icon="@mipmap/ic_launcher"
-        android:name=".Application"
-        >
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

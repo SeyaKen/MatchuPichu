@@ -2,8 +2,7 @@ import 'package:fcm_config/fcm_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:machupichu/mailSignin/TestAuthenticate.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; 
 import 'package:machupichu/mailSignin/mailAuthenticate.dart';
 import 'package:machupichu/main_page.dart';
 import 'package:machupichu/services/sharedpref_helper.dart';
@@ -47,7 +46,7 @@ class _MyAppState extends State<MyApp> {
               if (widget.hitokoto != null) {
                 return MainPage(0 ,'a', 'a', 'a', 0, 0);
               } else {
-                return TestAuthenticate();
+                return mailAuthenticate();
               }
             },
           ),

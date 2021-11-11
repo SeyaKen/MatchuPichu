@@ -78,10 +78,10 @@ class _MainPageState extends State<MainPage> {
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(
-                            Icons.call,
+                            Icons.add_box_outlined,
                             size: 30,
                           ),
-                          label: '電話する',
+                          label: 'ご意見箱',
                         ),
                         BottomNavigationBarItem(
                           icon: Container(

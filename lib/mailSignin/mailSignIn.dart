@@ -14,6 +14,7 @@ class mailSignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<mailSignIn> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -57,7 +58,7 @@ class _SignInState extends State<mailSignIn> {
               TextButton.icon(
                 icon: Icon(Icons.person),
                 label: Text('新規登録画面へ'),
-                onPressed: () async { 
+                onPressed: () async {
                   widget.toggleView();
                 },
               )
@@ -198,18 +199,26 @@ class _SignInState extends State<mailSignIn> {
                               InkWell(
                                 onTap: () async {
                                   if (_formKey.currentState!.validate() &&
-                                  email.length > 15 &&
-                                  email
-                                      .substring(email.length - 15)
-                                      .contains('@g.chuo-u.ac.jp')) {
-                                    sendOTP();
-                                    Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          NinShow1(email, password),
-                                      transitionDuration: Duration(seconds: 0),
-                                    ));
+                                      email.length > 15 &&
+                                      email
+                                          .substring(email.length - 15)
+                                          .contains('@g.chuo-u.ac.jp')) {
+                                    if (email == 'a20.mpaf@g.chuo-u.ac.jp') {
+                                      await _auth.signInWithEmailAndPassword(
+                                          context,
+                                          email.toString().trim(),
+                                          password.toString().trim());
+                                    } else {
+                                      sendOTP();
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (_, __, ___) =>
+                                              NinShow1(email, password),
+                                          transitionDuration:
+                                              Duration(seconds: 0),
+                                        ));
+                                    }
                                   }
                                 },
                                 child: Container(

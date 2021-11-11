@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>MachuPichu</string>
+	<string>MatchuPichu</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -36,11 +36,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>カメラへのアクセスを許可しますか？</string>
+	<string>カメラで撮影した画像を使い、プロフィール画面やトーク画面、身分証明に使えるようにします。カメラへのアクセスを許可しますか？</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>マイクへのアクセスを許可しますか？</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ライブラリへのアクセスを許可しますか？</string>
+	<string>ライブラリの画像を使い、プロフィール画面やトーク画面、身分証明に使えるようにします。ライブラリへのアクセスを許可しますか？</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
