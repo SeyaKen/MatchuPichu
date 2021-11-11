@@ -26,14 +26,9 @@ class _TelephoneState extends State<Telephone> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Colors.black,
-                      ),
+                    Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: Colors.white,
                     ),
                   ],
                 ),
