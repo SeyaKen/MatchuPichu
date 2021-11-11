@@ -78,7 +78,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(
-                            Icons.add_box_outlined,
+                            Icons.check_box_outline_blank ,
                             size: 30,
                           ),
                           label: 'ご意見箱',
