@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/services/database.dart';
 
@@ -11,6 +12,7 @@ class _TelephoneState extends State<Telephone> {
   final _formKey = GlobalKey<FormState>();
   String uid = FirebaseAuth.instance.currentUser!.uid;
   String goiken = '';
+  var _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,20 @@ class _TelephoneState extends State<Telephone> {
                 child: InkWell(
                   onTap: () async {
                     await DatabaseService(uid).addGoiken(goiken.trim());
-                    Navigator.pop(context);
+                    _controller.clear();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoAlertDialog(actions: [
+                            CupertinoDialogAction(
+                              isDefaultAction: true,
+                              child: const Text("閉じる"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ], title: Text('送信しました。'));
+                        });
                   },
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.3333333333,
@@ -75,6 +90,7 @@ class _TelephoneState extends State<Telephone> {
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  controller: _controller,
                   decoration: InputDecoration(
                     hintText: 'ご意見、クレーム、ご要望を入力',
                     border: InputBorder.none,
@@ -83,7 +99,6 @@ class _TelephoneState extends State<Telephone> {
                   maxLines: null,
                   onChanged: (val) {
                     setState(() => goiken = val);
-                    print(goiken);
                   },
                 ),
               ),

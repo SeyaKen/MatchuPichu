@@ -31,7 +31,10 @@ class editService extends ChangeNotifier {
     } else {
       this.sex = 'women';
     }
-    return FirebaseFirestore.instance.collection(sex!).where('uid', isEqualTo: uid).snapshots();
+    return FirebaseFirestore.instance
+        .collection(sex!)
+        .where('uid', isEqualTo: uid)
+        .snapshots();
   }
 
   Future updateUserToken(String token) async {
@@ -175,11 +178,13 @@ class editService extends ChangeNotifier {
         'imageURL': imageURL,
       });
     }
-    FirebaseFirestore.instance
-        .collection("chatrooms")
-        .orderBy("lastMessageSendTs", descending: true)
-        .where("users", arrayContains: uid)
-        .snapshots();
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection("chatrooms");
+    QuerySnapshot eventsQuery =
+        await ref.where("users", arrayContains: uid).get();
+    eventsQuery.docs.forEach((msgDoc) {
+      msgDoc.reference.update({'${uid}': imageURL});
+    });
     fetchImage();
   }
 
