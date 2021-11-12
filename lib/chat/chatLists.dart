@@ -15,11 +15,10 @@ class chatLists extends StatefulWidget {
 }
 
 class _chatListsState extends State<chatLists> {
-  Stream<QuerySnapshot<Object?>>? chatRoomsStream, profileListsStream;
+  Stream<QuerySnapshot<Object?>>? chatRoomsStream;
   String? myUserUid;
   late final a;
   late String m = '0';
-  DocumentSnapshot? dss;
 
   getMyUserUid() async {
     this.myUserUid = await FirebaseAuth.instance.currentUser!.uid;
@@ -29,7 +28,6 @@ class _chatListsState extends State<chatLists> {
   getChatRooms() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     chatRoomsStream = await DatabaseService(uid).getChatRooms();
-    profileListsStream = await DatabaseService(uid).fetchImage();
     setState(() {});
     // setStateがよばれるたびにrebuildされる
   }
@@ -56,59 +54,51 @@ class _chatListsState extends State<chatLists> {
 
   Widget chatRoomsList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: profileListsStream,
-      builder: (context, snapshot0) {
-        if (snapshot0.data != null) {
-            this.dss = snapshot0.data!.docs[0];
-          }
-        return StreamBuilder<QuerySnapshot>(
-          stream: chatRoomsStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              print(snapshot.error);
-            }
-            return snapshot.hasData
-                ? ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      if (0 == index) {
-                        notifications = 0;
-                      }
-                      DocumentSnapshot ds = snapshot.data!.docs[index];
-                      String uid = FirebaseAuth.instance.currentUser!.uid;
-                      // 相手の名前を代入
-                      String username =
-                          ds.id.replaceAll(uid, '').replaceAll('_', '');
-                      notifications =
-                          (notifications! + ds['${this.myUserUid}midoku']) as int?;
-                      if (index + 1 == snapshot.data!.docs.length) {
-                        DatabaseService(uid).uploadNotification(notifications);
-                        FlutterAppBadger.updateBadgeCount(notifications!);
-                      }
-                      return ChatRoomListTile(
-                        ds['lastMessage'],
-                        ds.id,
-                        this.myUserUid!,
-                        this.dss!['imageURL'],
-                        ds['sendBy'] == uid
-                            ? ds['${username}You']
-                            : ds['${username}I'],
-                        ds['${this.myUserUid}midoku'],
-                        ds['lastMessageSendTs'],
-                        this.m,
-                        ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
-                      );
-                    },
-                  )
-                : Container(
-                    color: Colors.white,
+      stream: chatRoomsStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          print(snapshot.error);
+        }
+        return snapshot.hasData
+            ? ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  if (0 == index) {
+                    notifications = 0;
+                  }
+                  DocumentSnapshot ds = snapshot.data!.docs[index];
+                  String uid = FirebaseAuth.instance.currentUser!.uid;
+                  // 相手の名前を代入
+                  String username =
+                      ds.id.replaceAll(uid, '').replaceAll('_', '');
+                  notifications =
+                      (notifications! + ds['${this.myUserUid}midoku']) as int?;
+                  if (index + 1 == snapshot.data!.docs.length) {
+                    DatabaseService(uid).uploadNotification(notifications);
+                    FlutterAppBadger.updateBadgeCount(notifications!);
+                  }
+                  return ChatRoomListTile(
+                    ds['lastMessage'],
+                    ds.id,
+                    this.myUserUid!,
+                    ds['$username'],
+                    ds['sendBy'] == uid
+                        ? ds['${username}You']
+                        : ds['${username}I'],
+                    ds['${this.myUserUid}midoku'],
+                    ds['lastMessageSendTs'],
+                    this.m,
+                    ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
                   );
-          },
-        );
-      }
+                },
+              )
+            : Container(
+                color: Colors.white,
+              );
+      },
     );
   }
 
