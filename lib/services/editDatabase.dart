@@ -175,6 +175,11 @@ class editService extends ChangeNotifier {
         'imageURL': imageURL,
       });
     }
+    FirebaseFirestore.instance
+        .collection("chatrooms")
+        .orderBy("lastMessageSendTs", descending: true)
+        .where("users", arrayContains: uid)
+        .snapshots();
     fetchImage();
   }
 
