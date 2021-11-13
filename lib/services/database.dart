@@ -170,18 +170,19 @@ class DatabaseService extends ChangeNotifier {
   // ファイルをアップロードする関数
   Future<String> uploadFile() async {
     if (imageFile == null) {
-      return '';
+      return 'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56';
+    } else {
+      final storage = FirebaseStorage.instance;
+      final ref = storage.ref().child('images').child(uid);
+
+      final snapshot = await ref.putFile(
+        imageFile!,
+      );
+
+      final urlDownload = await snapshot.ref.getDownloadURL();
+
+      return urlDownload;
     }
-    final storage = FirebaseStorage.instance;
-    final ref = storage.ref().child('images').child(uid);
-
-    final snapshot = await ref.putFile(
-      imageFile!,
-    );
-
-    final urlDownload = await snapshot.ref.getDownloadURL();
-
-    return urlDownload;
   }
 
   // チャットで画像をアップロードする処理

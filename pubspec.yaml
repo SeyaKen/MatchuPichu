@@ -63,6 +63,7 @@ flutter:
   assets:
     - images/icon.png
     - images/ojigi_animal_usagi.png
+    - images/account.png
   
 flutter_icons:
   android: true 

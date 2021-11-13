@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/register/forth_profile.dart';
 import 'package:machupichu/services/database.dart';
@@ -16,24 +17,24 @@ class ThirdProfile extends StatelessWidget {
       create: (_) => DatabaseService(uid),
       child: Scaffold(
         backgroundColor: Colors.white,
-      appBar: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 30,
-                  color: Colors.black,
+        appBar: AppBar(
+            backgroundColor: Colors.white,
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            title: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            )),
         body: SingleChildScrollView(
           child: Center(
             child: SafeArea(
@@ -121,14 +122,41 @@ class ThirdProfile extends StatelessWidget {
             Consumer<DatabaseService>(builder: (context, model, child) {
           return InkWell(
             onTap: () async {
-              model.imageFile != null ? await model.addImage() : null;
-              model.imageFile != null
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ForthProfile(),
-                      ))
-                  : null;
+              if (model.imageFile == null) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoAlertDialog(actions: [
+                        CupertinoDialogAction(
+                          isDefaultAction: true,
+                          child: const Text("いいえ"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        CupertinoDialogAction(
+                          textStyle: TextStyle(color: Colors.red),
+                          isDefaultAction: true,
+                          child: Text("はい"),
+                          onPressed: () async {
+                            await model.addImage();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForthProfile(),
+                                ));
+                          },
+                        )
+                      ], title: Text('画像を後で設定しますか？'));
+                    });
+              } else {
+                await model.addImage();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForthProfile(),
+                    ));
+              }
             },
             child: Padding(
               padding:
@@ -141,17 +169,13 @@ class ThirdProfile extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
-                      color: model.imageFile == null
-                          ? Colors.grey
-                          : Color(0xFFed1b24).withOpacity(0.77),
+                      color: Color(0xFFed1b24).withOpacity(0.77),
                     ),
                   ),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 30,
-                    color: model.imageFile == null
-                        ? Colors.grey
-                        : Color(0xFFed1b24).withOpacity(0.77),
+                    color: Color(0xFFed1b24).withOpacity(0.77),
                   ),
                 ],
               ),
