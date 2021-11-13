@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ResetScreen extends StatefulWidget {
+class MailResetScreen extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
 }
 
-class _SignInState extends State<ResetScreen> {
+class _SignInState extends State<MailResetScreen> {
   // ここでauth.dartで作ったクラスを_authに代入
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
@@ -34,14 +35,6 @@ class _SignInState extends State<ResetScreen> {
                 ),
                 SizedBox(
                   width: 10,
-                ),
-                Text(
-                  'パスワードを忘れた場合',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                    color: Colors.black,
-                  ),
                 ),
                 Icon(
                   Icons.arrow_back_ios_new_rounded,
@@ -110,8 +103,28 @@ class _SignInState extends State<ResetScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  _auth.sendPasswordResetEmail(email: email);
-                                  Navigator.pop(context);
+                                  if (_formKey.currentState!.validate() &&
+                                      email.length > 15 &&
+                                      email
+                                          .substring(email.length - 15)
+                                          .contains('@g.chuo-u.ac.jp')) {
+                                    _auth.sendPasswordResetEmail(email: email);
+                                    Navigator.pop(context);
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CupertinoAlertDialog(actions: [
+                                            CupertinoDialogAction(
+                                              isDefaultAction: true,
+                                              child: const Text("閉じる"),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ], title: Text('正しいメールアドレスを入力してください'));
+                                        });
+                                  }
                                 },
                                 child: Container(
                                   width:

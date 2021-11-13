@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:machupichu/mailSignin/mailAuth.dart';
 import 'package:machupichu/mailSignin/ninshow1.dart';
+import 'package:machupichu/mailSignin/mailReset.dart';
 
 class mailSignIn extends StatefulWidget {
   final Function toggleView;
@@ -211,13 +212,13 @@ class _SignInState extends State<mailSignIn> {
                                     } else {
                                       sendOTP();
                                       Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (_, __, ___) =>
-                                              NinShow1(email, password),
-                                          transitionDuration:
-                                              Duration(seconds: 0),
-                                        ));
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (_, __, ___) =>
+                                                NinShow1(email, password),
+                                            transitionDuration:
+                                                Duration(seconds: 0),
+                                          ));
                                     }
                                   }
                                 },
@@ -238,6 +239,18 @@ class _SignInState extends State<mailSignIn> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          child: Text('パスワードを忘れた場合'),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MailResetScreen()));
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

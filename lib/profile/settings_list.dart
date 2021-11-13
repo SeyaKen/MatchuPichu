@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/kanri/goiken_lists_screen.dart';
 import 'package:machupichu/kanri/kanri.dart';
+import 'package:machupichu/mailSignin/mailReset.dart';
 import 'package:machupichu/profile/goiken_screen.dart';
 import 'package:machupichu/profile/mibunnshoumei.dart';
 import 'package:machupichu/services/auth.dart';
@@ -17,7 +18,7 @@ class SettingList extends StatefulWidget {
 }
 
 class _SettingListState extends State<SettingList> {
-  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'ご意見箱', 'お問い合わせ', '本人・年齢確認'];
+  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'ご意見箱', 'お問い合わせ', '本人・年齢確認', 'パスワード変更'];
   late final a;
   late String m = '0';
 
@@ -115,7 +116,10 @@ class _SettingListState extends State<SettingList> {
                   ),
                 ),
                 child: ListTile(
-                  title: listItem[index] == 'ご意見箱'
+                  title: 
+                  listItem[index] == 'パスワード変更'
+                  ? Text(listItem[index])
+                  : listItem[index] == 'ご意見箱'
                       ? Text(listItem[index])
                       : listItem[index] != '本人・年齢確認'
                           ? Text(listItem[index])
@@ -175,7 +179,14 @@ class _SettingListState extends State<SettingList> {
                                           ],
                                         ),
                   onTap: () async {
-                    listItem[index] == '本人・年齢確認'
+                    listItem[index] == 'パスワード変更'
+                    ? Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => MailResetScreen(),
+                                  transitionDuration: Duration(seconds: 0),
+                                ))
+                    : listItem[index] == '本人・年齢確認'
                         ? this.m == '0' || this.m == '3'
                             ? Navigator.push(
                                 context,
