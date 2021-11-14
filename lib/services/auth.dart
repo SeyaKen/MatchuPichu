@@ -72,7 +72,6 @@ class AuthMethods {
   }
 
   Future signOut(context) async {
-    print('ここを実行しました。');
     // ここでキーを外す
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear().then((value) => auth.signOut().then((value) => {
