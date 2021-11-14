@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:machupichu/profile/sousin.dart';
+import 'package:machupichu/settings/sousin.dart';
 import 'package:machupichu/services/database.dart';
 import 'package:provider/provider.dart';
 

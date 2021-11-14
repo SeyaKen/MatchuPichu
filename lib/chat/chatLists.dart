@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:machupichu/chat/chatScreen.dart';
-import 'package:machupichu/profile/mibunnshoumei.dart';
+import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/database.dart';
 
 int? notifications = 0;

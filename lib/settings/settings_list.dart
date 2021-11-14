@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/kanri/goiken_lists_screen.dart';
 import 'package:machupichu/kanri/kanri.dart';
-import 'package:machupichu/mailSignin/mailReset.dart';
-import 'package:machupichu/profile/goiken_screen.dart';
-import 'package:machupichu/profile/mibunnshoumei.dart';
+import 'package:machupichu/settings/mailReset.dart';
+import 'package:machupichu/settings/goiken_screen.dart';
+import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/auth.dart';
 import 'package:machupichu/settings/privacy.dart';
 import 'package:machupichu/settings/riyoukiyaku.dart';
+import 'package:machupichu/settings/taikai_detail.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingList extends StatefulWidget {
@@ -18,7 +19,7 @@ class SettingList extends StatefulWidget {
 }
 
 class _SettingListState extends State<SettingList> {
-  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'ご意見箱', 'お問い合わせ', '本人・年齢確認', 'パスワード変更'];
+  var listItem = ['利用規約', 'プライバシーポリシー', 'ログアウト', 'ご意見箱', 'お問い合わせ', '本人・年齢確認', 'パスワード変更', '退会'];
   late final a;
   late String m = '0';
 
@@ -116,12 +117,7 @@ class _SettingListState extends State<SettingList> {
                   ),
                 ),
                 child: ListTile(
-                  title: 
-                  listItem[index] == 'パスワード変更'
-                  ? Text(listItem[index])
-                  : listItem[index] == 'ご意見箱'
-                      ? Text(listItem[index])
-                      : listItem[index] != '本人・年齢確認'
+                  title: listItem[index] != '本人・年齢確認'
                           ? Text(listItem[index])
                           : listItem[index] == '本人・年齢確認' && this.m == '0'
                               ? Text(listItem[index])
@@ -179,7 +175,14 @@ class _SettingListState extends State<SettingList> {
                                           ],
                                         ),
                   onTap: () async {
-                    listItem[index] == 'パスワード変更'
+                    listItem[index] == '退会'
+                    ? Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => TaikaiDetail(),
+                                  transitionDuration: Duration(seconds: 0),
+                                ))
+                    : listItem[index] == 'パスワード変更'
                     ? Navigator.push(
                                 context,
                                 PageRouteBuilder(

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:machupichu/profile/osirase.dart';
+import 'package:machupichu/osirase/osirase.dart';
 import 'package:machupichu/profile/profile_edit.dart';
 import 'package:machupichu/services/database.dart';
-import 'package:machupichu/profile/settings_list.dart';
+import 'package:machupichu/settings/settings_list.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

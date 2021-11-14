@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:machupichu/profile/osiraseDetail.dart';
+import 'package:machupichu/osirase/osiraseDetail.dart';
 import 'package:machupichu/services/database.dart';
 
 class OsiraseList extends StatefulWidget {

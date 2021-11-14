@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:machupichu/mailSignin/mailAuth.dart';
 import 'package:machupichu/mailSignin/ninshow1.dart';
-import 'package:machupichu/mailSignin/mailReset.dart';
+import 'package:machupichu/settings/mailReset.dart';
 
 class mailSignIn extends StatefulWidget {
   final Function toggleView;

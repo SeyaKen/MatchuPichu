@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:machupichu/domain/list.dart';
-import 'package:machupichu/profile/sousin.dart';
+import 'package:machupichu/settings/sousin.dart';
 
 class DatabaseService extends ChangeNotifier {
   final String uid;

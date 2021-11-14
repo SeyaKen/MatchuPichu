@@ -28,18 +28,15 @@ class _SignInState extends State<MailResetScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 30,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 30,
-                  color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             )),
@@ -59,6 +56,7 @@ class _SignInState extends State<MailResetScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Column(
                   children: [
+                    Text('入力されたメールアドレス宛に、パスワード変更用のリンクを送ります。現在お使いのメールアドレスを入力してください。'),
                     Column(
                       children: [
                         SizedBox(
@@ -114,15 +112,18 @@ class _SignInState extends State<MailResetScreen> {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return CupertinoAlertDialog(actions: [
-                                            CupertinoDialogAction(
-                                              isDefaultAction: true,
-                                              child: const Text("閉じる"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ], title: Text('正しいメールアドレスを入力してください'));
+                                          return CupertinoAlertDialog(
+                                              actions: [
+                                                CupertinoDialogAction(
+                                                  isDefaultAction: true,
+                                                  child: const Text("閉じる"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                              title:
+                                                  Text('正しいメールアドレスを入力してください'));
                                         });
                                   }
                                 },
