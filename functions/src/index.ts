@@ -4,6 +4,17 @@ admin.initializeApp(functions.config().firebase);
 export const firestore = admin.firestore();
 const db = admin.firestore();
 
+exports.deleteUser = functions
+    .region("asia-northeast1")
+    .firestore.document("delete_users/{docId}")
+    .onCreate(async (snap, context) => {
+      const deleteDocument = snap.data();
+      const uid = deleteDocument.uid;
+
+      // Authenticationのユーザーを削除する
+      await admin.auth().deleteUser(uid);
+    });
+
 export const createNotifications = functions.region('asia-northeast1').firestore.
     document("/osirase/{osirase}")
     .onCreate( async (snapshot: { data: () => any; }, context: any) => {

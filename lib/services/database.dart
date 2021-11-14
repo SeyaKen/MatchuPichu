@@ -215,6 +215,25 @@ class DatabaseService extends ChangeNotifier {
   }
   // 画像を処理する関数
 
+  // 退会ユーザー情報削除の関数
+  Future deleteUser() async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+    FirebaseFirestore.instance
+        .collection("user")
+        .doc(uid)
+        .collection('token')
+        .doc('token')
+        .delete();
+    if (doc['sex'] == 'men') {
+      await menList.doc(uid).delete();
+      await FirebaseFirestore.instance.collection('user').doc(uid).delete();
+    } else {
+      await womenList.doc(uid).delete();
+      await FirebaseFirestore.instance.collection('user').doc(uid).delete();
+    }
+  }
+
   Future allUpload() async {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
