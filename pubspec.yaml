@@ -47,6 +47,7 @@ dependencies:
   firebase_remote_config:
   pub_semver:
   package_info:
+  flutter_slidable:
   flutter_localizations:
     sdk: flutter
 

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:machupichu/chat/chatScreen.dart';
 import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/database.dart';
@@ -80,18 +81,59 @@ class _chatListsState extends State<chatLists> {
                     DatabaseService(uid).uploadNotification(notifications);
                     FlutterAppBadger.updateBadgeCount(notifications!);
                   }
-                  return ChatRoomListTile(
-                    ds['lastMessage'],
-                    ds.id,
-                    this.myUserUid!,
-                    ds['$username'],
-                    ds['sendBy'] == uid
-                        ? ds['${username}You']
-                        : ds['${username}I'],
-                    ds['${this.myUserUid}midoku'],
-                    ds['lastMessageSendTs'],
-                    this.m,
-                    ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
+                  return Slidable(
+                    key: const ValueKey(0),
+                    startActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        ),
+                        SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0xFF21B7CA),
+                          foregroundColor: Colors.white,
+                          icon: Icons.share,
+                          label: 'Share',
+                        ),
+                      ],
+                    ),
+                    endActionPane: const ActionPane(
+                      motion: ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0xFF7BC043),
+                          foregroundColor: Colors.white,
+                          icon: Icons.archive,
+                          label: 'Archive',
+                        ),
+                        SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0xFF0392CF),
+                          foregroundColor: Colors.white,
+                          icon: Icons.save,
+                          label: 'Save',
+                        ),
+                      ],
+                    ),
+                    child: ChatRoomListTile(
+                      ds['lastMessage'],
+                      ds.id,
+                      this.myUserUid!,
+                      ds['$username'],
+                      ds['sendBy'] == uid
+                          ? ds['${username}You']
+                          : ds['${username}I'],
+                      ds['${this.myUserUid}midoku'],
+                      ds['lastMessageSendTs'],
+                      this.m,
+                      ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
+                    ),
                   );
                 },
               )
