@@ -357,6 +357,17 @@ class DatabaseService extends ChangeNotifier {
     });
   }
 
+  deleteChatRoom(String chatRoomId) async {
+    // chatroom does not exists
+    String block = chatRoomId.replaceAll(uid, '').replaceAll('_', '');
+    return FirebaseFirestore.instance
+        .collection('chatrooms')
+        .doc(chatRoomId)
+        .update({
+      "users": [block],
+    });
+  }
+
   kaijoChatRoom(String chatRoomId) async {
     // chatroom does not exists
     String block = chatRoomId.replaceAll(uid, '').replaceAll('_', '');

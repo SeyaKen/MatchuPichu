@@ -206,12 +206,15 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-                    onPressed: null,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                  ),
+            onPressed: (context) async {
+              await DatabaseService(widget.myUserUid)
+                  .deleteChatRoom(widget.chatRoomId);
+            },
+            backgroundColor: Color(0xFFFE4A49),
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: '削除',
+          ),
           SlidableAction(
             onPressed: (context) {
               DatabaseService(widget.myUserUid)
@@ -281,10 +284,10 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                 this.mute = !mute;
               });
             },
-            backgroundColor: Color(0xFF03c754),
-            foregroundColor: Colors.white,
-            icon: mute ? Icons.volume_off_sharp : Icons.volume_up_outlined,
-            label: this.mute ? '通知オン' : '通知オフ',
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.red,
+            icon: Icons.warning_rounded ,
+            label: '通報',
           ),
         ],
       ),
