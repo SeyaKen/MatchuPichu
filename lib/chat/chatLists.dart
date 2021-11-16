@@ -81,59 +81,18 @@ class _chatListsState extends State<chatLists> {
                     DatabaseService(uid).uploadNotification(notifications);
                     FlutterAppBadger.updateBadgeCount(notifications!);
                   }
-                  return Slidable(
-                    key: const ValueKey(0),
-                    startActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Color(0xFF21B7CA),
-                          foregroundColor: Colors.white,
-                          icon: Icons.share,
-                          label: 'Share',
-                        ),
-                      ],
-                    ),
-                    endActionPane: const ActionPane(
-                      motion: ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Color(0xFF7BC043),
-                          foregroundColor: Colors.white,
-                          icon: Icons.archive,
-                          label: 'Archive',
-                        ),
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Color(0xFF0392CF),
-                          foregroundColor: Colors.white,
-                          icon: Icons.save,
-                          label: 'Save',
-                        ),
-                      ],
-                    ),
-                    child: ChatRoomListTile(
-                      ds['lastMessage'],
-                      ds.id,
-                      this.myUserUid!,
-                      ds['$username'],
-                      ds['sendBy'] == uid
-                          ? ds['${username}You']
-                          : ds['${username}I'],
-                      ds['${this.myUserUid}midoku'],
-                      ds['lastMessageSendTs'],
-                      this.m,
-                      ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
-                    ),
+                  return ChatRoomListTile(
+                    ds['lastMessage'],
+                    ds.id,
+                    this.myUserUid!,
+                    ds['$username'],
+                    ds['sendBy'] == uid
+                        ? ds['${username}You']
+                        : ds['${username}I'],
+                    ds['${this.myUserUid}midoku'],
+                    ds['lastMessageSendTs'],
+                    this.m,
+                    ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
                   );
                 },
               )
@@ -214,152 +173,265 @@ class ChatRoomListTile extends StatefulWidget {
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
   String? profilePicUrl = '', name = '';
+  late bool mute = false;
+  late bool block = false;
+
+  doThisOnLaunch() async {
+    final a = FirebaseFirestore.instance
+        .collection('chatrooms')
+        .doc(widget.chatRoomId);
+    try {
+      a.get().then((docSnapshot) => {
+            this.mute = docSnapshot.get('${widget.myUserUid}mute'),
+            this.block = docSnapshot.get('${widget.myUserUid}block'),
+            setState(() {}),
+          });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    doThisOnLaunch();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30000000),
-                  child: widget.profilePicUrl.isNotEmpty
-                      ? Image.network(
-                          widget.profilePicUrl,
-                          fit: BoxFit.cover,
-                          height: MediaQuery.of(context).size.width * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                        )
-                      : Container(height: 40, width: 40, color: Colors.grey),
-                ),
-                const SizedBox(width: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.name.length > 10
-                                ? widget.name.substring(0, 10)
-                                : widget.name,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            widget.lastMessage.contains('firebasestorage')
-                                ? '画像を送信しました。'
-                                : widget.lastMessage.length > 15
-                                    ? widget.lastMessage.substring(0, 15) +
-                                        '...'
-                                    : widget.lastMessage,
-                          )
-                        ]),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${widget.ts.toDate().toString().substring(10, 16)}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+    return Slidable(
+      key: const ValueKey(0),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+                    onPressed: null,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
                   ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30000000),
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    color: widget.mido == 0
-                        ? Colors.white
-                        : Color(0xFFed1b24).withOpacity(0.77),
-                    child: Center(
-                        child: Text(
-                      widget.mido == 0 ? '' : widget.mido.toString(),
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    )),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          SlidableAction(
+            onPressed: (context) {
+              DatabaseService(widget.myUserUid)
+                  .muteChatRoom(widget.chatRoomId, !mute);
+              setState(() {
+                this.mute = !mute;
+              });
+            },
+            backgroundColor: Color(0xFF03c754),
+            foregroundColor: Colors.white,
+            icon: mute ? Icons.volume_off_sharp : Icons.volume_up_outlined,
+            label: this.mute ? '通知オン' : '通知オフ',
+          ),
+        ],
       ),
-      onTap: () {
-        if (widget.m == '2') {
-          FirebaseFirestore.instance
-              .collection("chatrooms")
-              .doc(widget.chatRoomId)
-              .update({'${widget.myUserUid}midoku': 0});
-          FlutterAppBadger.updateBadgeCount(notifications! - widget.mido);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => chatScreen(
-                      widget.aitenoname,
-                      widget.myUserUid,
-                      widget.chatRoomId,
-                      widget.name,
-                      widget.profilePicUrl)));
-        } else if (widget.m == '1') {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return CupertinoAlertDialog(
-                    actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        child: const Text("閉じる"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                    title: Text(
-                        'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              !this.block
+                  ? showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                            actions: [
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: const Text("いいえ"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                textStyle: TextStyle(color: Colors.red),
+                                isDefaultAction: true,
+                                child: Text("はい"),
+                                onPressed: () async {
+                                  DatabaseService(widget.myUserUid)
+                                      .blockChatRoom(widget.chatRoomId);
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    this.block = !block;
+                                  });
+                                },
+                              )
+                            ],
+                            title: Text(
+                                'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'));
+                      })
+                  : setState(() {
+                      DatabaseService(widget.myUserUid)
+                          .kaijoChatRoom(widget.chatRoomId);
+                      this.block = !block;
+                    });
+            },
+            backgroundColor: Color(0xFFff334a),
+            foregroundColor: Colors.white,
+            icon: this.block ? Icons.do_not_disturb_on : Icons.block,
+            label: this.block ? 'ブロック解除' : 'ブロック',
+          ),
+          SlidableAction(
+            onPressed: (context) {
+              DatabaseService(widget.myUserUid)
+                  .muteChatRoom(widget.chatRoomId, !mute);
+              setState(() {
+                this.mute = !mute;
               });
-        } else {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return CupertinoAlertDialog(actions: [
-                  CupertinoDialogAction(
-                    isDefaultAction: true,
-                    child: const Text("いいえ"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+            },
+            backgroundColor: Color(0xFF03c754),
+            foregroundColor: Colors.white,
+            icon: mute ? Icons.volume_off_sharp : Icons.volume_up_outlined,
+            label: this.mute ? '通知オン' : '通知オフ',
+          ),
+        ],
+      ),
+      child: InkWell(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30000000),
+                    child: widget.profilePicUrl.isNotEmpty
+                        ? Image.network(
+                            widget.profilePicUrl,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.15,
+                          )
+                        : Container(height: 40, width: 40, color: Colors.grey),
                   ),
-                  CupertinoDialogAction(
-                    textStyle: TextStyle(color: Colors.red),
-                    isDefaultAction: true,
-                    child: Text("はい"),
-                    onPressed: () async {
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => Mibunnshoumei(),
-                            transitionDuration: Duration(seconds: 0),
-                          ));
-                    },
-                  )
-                ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
-              });
-        }
-      },
+                  const SizedBox(width: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name.length > 10
+                                  ? widget.name.substring(0, 10)
+                                  : widget.name,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              widget.lastMessage.contains('firebasestorage')
+                                  ? '画像を送信しました。'
+                                  : widget.lastMessage.length > 15
+                                      ? widget.lastMessage.substring(0, 15) +
+                                          '...'
+                                      : widget.lastMessage,
+                            )
+                          ]),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.ts.toDate().toString().substring(10, 16)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30000000),
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      color: widget.mido == 0
+                          ? Colors.white
+                          : Color(0xFFed1b24).withOpacity(0.77),
+                      child: Center(
+                          child: Text(
+                        widget.mido == 0 ? '' : widget.mido.toString(),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        onTap: () {
+          if (widget.m == '2') {
+            FirebaseFirestore.instance
+                .collection("chatrooms")
+                .doc(widget.chatRoomId)
+                .update({'${widget.myUserUid}midoku': 0});
+            FlutterAppBadger.updateBadgeCount(notifications! - widget.mido);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => chatScreen(
+                        widget.aitenoname,
+                        widget.myUserUid,
+                        widget.chatRoomId,
+                        widget.name,
+                        widget.profilePicUrl)));
+          } else if (widget.m == '1') {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                      actions: [
+                        CupertinoDialogAction(
+                          isDefaultAction: true,
+                          child: const Text("閉じる"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                      title: Text(
+                          'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+                });
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return CupertinoAlertDialog(actions: [
+                    CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: const Text("いいえ"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    CupertinoDialogAction(
+                      textStyle: TextStyle(color: Colors.red),
+                      isDefaultAction: true,
+                      child: Text("はい"),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => Mibunnshoumei(),
+                              transitionDuration: Duration(seconds: 0),
+                            ));
+                      },
+                    )
+                  ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+                });
+          }
+        },
+      ),
     );
   }
 }

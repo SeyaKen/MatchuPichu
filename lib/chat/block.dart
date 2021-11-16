@@ -18,7 +18,6 @@ class _BlockScreenState extends State<BlockScreen> {
   late bool block = false;
 
   doThisOnLaunch() async {
-    print(widget.uid);
     final a = FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(widget.chatRoomId);
@@ -135,7 +134,6 @@ class _BlockScreenState extends State<BlockScreen> {
                 ),
                 Text(
                   this.block ? 'ブロック解除' : 'ブロック',
-                  style: TextStyle(),
                 ),
               ],
             ),
