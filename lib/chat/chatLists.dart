@@ -280,7 +280,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
             onPressed: null,
             backgroundColor: Colors.white,
             foregroundColor: Colors.red,
-            icon: Icons.warning_rounded ,
+            icon: Icons.warning_rounded,
             label: '通報',
           ),
         ],

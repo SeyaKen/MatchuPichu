@@ -74,19 +74,33 @@ class _HomeDetailState extends State<HomeDetail> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 30,
-                  color: Colors.black,
+          title: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ],
+                InkWell(
+                  onTap: () {
+                    
+                  },
+                  child: Icon(
+                    Icons.warning_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           )),
       floatingActionButton: Container(
         decoration: BoxDecoration(
