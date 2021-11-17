@@ -6,6 +6,7 @@ import 'package:machupichu/chat/chatScreen.dart';
 import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/database.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:machupichu/tuuhou/tuuhou.dart';
 
 class HomeDetail extends StatefulWidget {
   final String uid, myUserUid;
@@ -74,33 +75,47 @@ class _HomeDetailState extends State<HomeDetail> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 30,
-                    color: Colors.black,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 30,
+                  color: Colors.black,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => tuuhouScreen(),
+                        transitionDuration: Duration(seconds: 0),
+                      ));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.warning_rounded,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                      Text('通報',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          )),
+                    ],
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    
-                  },
-                  child: Icon(
-                    Icons.warning_rounded,
-                    size: 30,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           )),
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -156,19 +171,22 @@ class _HomeDetailState extends State<HomeDetail> {
                     ),
                     transitionDuration: Duration(seconds: 0),
                   ));
-            } else if(this.m == '1') {
+            } else if (this.m == '1') {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return CupertinoAlertDialog(actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        child: const Text("閉じる"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ], title: Text('ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+                    return CupertinoAlertDialog(
+                        actions: [
+                          CupertinoDialogAction(
+                            isDefaultAction: true,
+                            child: const Text("閉じる"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                        title: Text(
+                            'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
                   });
             } else {
               showDialog(

@@ -7,6 +7,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:machupichu/chat/chatScreen.dart';
 import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/database.dart';
+import 'package:machupichu/tuuhou/tuuhou.dart';
 
 int? notifications = 0;
 
@@ -277,7 +278,14 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
             label: this.block ? 'ブロック解除' : 'ブロック',
           ),
           SlidableAction(
-            onPressed: null,
+            onPressed: (context) {
+              Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => tuuhouScreen(),
+                    transitionDuration: Duration(seconds: 0),
+                  ));
+            },
             backgroundColor: Colors.white,
             foregroundColor: Colors.red,
             icon: Icons.warning_rounded,
