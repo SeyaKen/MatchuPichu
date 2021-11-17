@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:machupichu/kanri/goriyou_shousai.dart';
 import 'package:machupichu/kanri/kanri_model.dart';
 
-class GoikenListsScreen extends StatefulWidget {
-  const GoikenListsScreen({Key? key}) : super(key: key);
+class TuuhouListScreen extends StatefulWidget {
+  const TuuhouListScreen({Key? key}) : super(key: key);
 
   @override
-  _GoikenListsScreenState createState() => _GoikenListsScreenState();
+  _TuuhouListScreenState createState() => _TuuhouListScreenState();
 }
 
-class _GoikenListsScreenState extends State<GoikenListsScreen> {
+class _TuuhouListScreenState extends State<TuuhouListScreen> {
   Stream<QuerySnapshot<Object?>>? GoikenListsStream;
 
   getHomeLists() async {
-    GoikenListsStream = await KanriModel().fetchGoikens();
+    GoikenListsStream = await KanriModel().fetchTuuhou();
     setState(() {});
   }
 
@@ -48,7 +48,7 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
                   size: 30,
                 ),
               ),
-              Text('ご意見リスト'),
+              Text('通報リスト'),
               Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 30,
@@ -76,7 +76,7 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
                                 context,
                                 PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
-                                      GoriyouShousai(ds['goiken']),
+                                      GoriyouShousai(ds['tuuhou']),
                                   transitionDuration: Duration(seconds: 0),
                                 ));
                           },
@@ -88,11 +88,33 @@ class _GoikenListsScreenState extends State<GoikenListsScreen> {
                                         Color(0xFFed1b24).withOpacity(0.77))),
                             child: Stack(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Text(
-                                    ds['goiken'],
-                                  ),
+                                Column(
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          ds['tuuhou'],
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          '相手${ds['aitenoUid']}',
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          '自分${ds['myUid']}',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Align(
                                     alignment: Alignment.bottomCenter,

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/kanri/goiken_lists_screen.dart';
 import 'package:machupichu/kanri/kanri.dart';
+import 'package:machupichu/kanri/tuuhou_list.dart';
 import 'package:machupichu/services/database.dart';
 import 'package:machupichu/tuuhou/tuuhou.dart';
 
@@ -101,6 +102,15 @@ class _kanriListScreenState extends State<kanriListScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    FirebaseAuth.instance.currentUser!.email ==
+                            'a20.mpaf@g.chuo-u.ac.jp'
+                    ? Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => TuuhouListScreen(),
+                              transitionDuration: Duration(seconds: 0),
+                            ))
+                        : null;
                   },
                   child: Icon(
                     Icons.warning_rounded,

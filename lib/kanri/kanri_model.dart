@@ -8,6 +8,10 @@ class KanriModel {
   Future<Stream<QuerySnapshot>> fetchGoikens() async {
     return FirebaseFirestore.instance.collection('goiken').snapshots();
   }
+
+  Future<Stream<QuerySnapshot>> fetchTuuhou() async {
+    return FirebaseFirestore.instance.collection('tuuhou').snapshots();
+  }
 }
 
   
