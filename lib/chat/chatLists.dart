@@ -277,13 +277,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
             label: this.block ? 'ブロック解除' : 'ブロック',
           ),
           SlidableAction(
-            onPressed: (context) {
-              DatabaseService(widget.myUserUid)
-                  .muteChatRoom(widget.chatRoomId, !mute);
-              setState(() {
-                this.mute = !mute;
-              });
-            },
+            onPressed: null,
             backgroundColor: Colors.white,
             foregroundColor: Colors.red,
             icon: Icons.warning_rounded ,
