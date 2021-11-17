@@ -143,6 +143,7 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
           .addMessage(chatRoomId, messageId, messageInfoMap)
           .then((value) {
         Map<String, dynamic> lastMessageInfoMap = {
+          "users": [widget.name,  widget.chatWithUsername],
           "lastMessage": message,
           "lastMessageSendTs": lastMessageTs,
           "lastMessageSendBy": widget.name,
