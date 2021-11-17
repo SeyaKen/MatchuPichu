@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:machupichu/kanri/kanri_list.dart';
 import 'package:machupichu/osirase/osirase.dart';
 import 'package:machupichu/profile/profile_edit.dart';
 import 'package:machupichu/services/database.dart';
@@ -102,6 +103,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           Stack(
                             children: [
                               InkWell(
+                                onDoubleTap: () {
+                                  FirebaseAuth.instance.currentUser!.email ==
+                            'a20.mpaf@g.chuo-u.ac.jp'
+                        ? Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => kanriListScreen(),
+                              transitionDuration: Duration(seconds: 0),
+                            ))
+                        : null;
+                                },
                                 onTap: () async{
                                   await FirebaseFirestore.instance.collection('user').doc(uid).update({'kakuninbool': false});
                                   Navigator.push(

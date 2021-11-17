@@ -98,6 +98,15 @@ class DatabaseService extends ChangeNotifier {
     return urlDownload;
   }
 
+  Future addTuuhou(String tuuhou, String aitenoUid, myUid) async {
+    // firebaseに追加
+    await FirebaseFirestore.instance.collection('tuuhou').doc().set({
+      'tuuhou': tuuhou,
+      'aitenoUid': aitenoUid,
+      'myUid': myUid,
+    });
+  }
+
   Future addGoiken(String goiken) async {
     // firebaseに追加
     await FirebaseFirestore.instance.collection('goiken').doc().set({

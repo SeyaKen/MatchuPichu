@@ -282,7 +282,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
               Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => tuuhouScreen(),
+                    pageBuilder: (_, __, ___) => tuuhouScreen(widget.myUserUid, widget.aitenoname),
                     transitionDuration: Duration(seconds: 0),
                   ));
             },

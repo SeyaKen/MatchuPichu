@@ -66,44 +66,18 @@ class _SettingListState extends State<SettingList> {
                     color: Colors.white,
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    FirebaseAuth.instance.currentUser!.email ==
-                            'a20.mpaf@g.chuo-u.ac.jp'
-                        ? Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => KanriScreen(),
-                              transitionDuration: Duration(seconds: 0),
-                            ))
-                        : null;
-                  },
-                  child: Text(
-                    '設定',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                      color: Colors.white,
-                    ),
+                Text(
+                  '設定',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.white,
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    FirebaseAuth.instance.currentUser!.email ==
-                            'a20.mpaf@g.chuo-u.ac.jp'
-                        ? Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => GoikenListsScreen(),
-                              transitionDuration: Duration(seconds: 0),
-                            ))
-                        : null;
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 30,
-                    color: Colors.transparent,
-                  ),
+                Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 30,
+                  color: Colors.transparent,
                 ),
               ],
             )),

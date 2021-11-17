@@ -93,7 +93,7 @@ class _HomeDetailState extends State<HomeDetail> {
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => tuuhouScreen(),
+                        pageBuilder: (_, __, ___) => tuuhouScreen(widget.myUserUid, widget.uid),
                         transitionDuration: Duration(seconds: 0),
                       ));
                 },

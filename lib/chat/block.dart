@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:machupichu/services/database.dart';
+import 'package:machupichu/tuuhou/tuuhou.dart';
 
 class BlockScreen extends StatefulWidget {
   String name, chatRoomId, uid;
@@ -16,6 +17,7 @@ class BlockScreen extends StatefulWidget {
 class _BlockScreenState extends State<BlockScreen> {
   late bool mute = false;
   late bool block = false;
+  late String aitenoUid = '';
 
   doThisOnLaunch() async {
     final a = FirebaseFirestore.instance
@@ -36,6 +38,8 @@ class _BlockScreenState extends State<BlockScreen> {
   void initState() {
     super.initState();
     doThisOnLaunch();
+    this.aitenoUid =
+        widget.chatRoomId.replaceAll(widget.uid, '').replaceAll('_', '');
     setState(() {});
   }
 
@@ -93,32 +97,30 @@ class _BlockScreenState extends State<BlockScreen> {
                             context: context,
                             builder: (context) {
                               return CupertinoAlertDialog(
-                                      actions: [
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            child: const Text("いいえ"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          CupertinoDialogAction(
-                                            textStyle:
-                                                TextStyle(color: Colors.red),
-                                            isDefaultAction: true,
-                                            child: Text("はい"),
-                                            onPressed: () async {
-                                              DatabaseService(widget.uid)
-                                                  .blockChatRoom(
-                                                      widget.chatRoomId);
-                                              Navigator.of(context).pop();
-                                              setState(() {
-                                                this.block = !block;
-                                              });
-                                            },
-                                          )
-                                        ],
-                                      title: Text(
-                                          'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'));
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("いいえ"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      textStyle: TextStyle(color: Colors.red),
+                                      isDefaultAction: true,
+                                      child: Text("はい"),
+                                      onPressed: () async {
+                                        DatabaseService(widget.uid)
+                                            .blockChatRoom(widget.chatRoomId);
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          this.block = !block;
+                                        });
+                                      },
+                                    )
+                                  ],
+                                  title: Text(
+                                      'ブロックしている間はトーク履歴を見ることができません。また、もう一度追加したい場合は検索して追加し直す必要があります。それでもよろしいですか？'));
                             })
                         : setState(() {
                             DatabaseService(widget.uid)
@@ -134,6 +136,32 @@ class _BlockScreenState extends State<BlockScreen> {
                 ),
                 Text(
                   this.block ? 'ブロック解除' : 'ブロック',
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) =>
+                              tuuhouScreen(widget.uid, aitenoUid),
+                          transitionDuration: Duration(seconds: 0),
+                        ));
+                  },
+                  child: Icon(
+                    Icons.warning_rounded,
+                    size: 80,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  '通報する',
                 ),
               ],
             ),

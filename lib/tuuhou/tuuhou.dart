@@ -1,17 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:machupichu/services/database.dart';
 
 class tuuhouScreen extends StatefulWidget {
-  const tuuhouScreen({Key? key}) : super(key: key);
+  String myUid, tuuhouAitenoUid;
+  tuuhouScreen(this.myUid, this.tuuhouAitenoUid);
 
   @override
   _tuuhouScreenState createState() => _tuuhouScreenState();
 }
 
 class _tuuhouScreenState extends State<tuuhouScreen> {
-  late String ex = '';
+  late String tuuhou = '';
   final _formKey = GlobalKey<FormState>();
   String uid = FirebaseAuth.instance.currentUser!.uid;
+  var _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +63,7 @@ class _tuuhouScreenState extends State<tuuhouScreen> {
                   SizedBox(height: 150),
                   Row(
                     children: [
-                      Text(
-                        '通報理由',
+                      Text('通報理由',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 25,
@@ -71,15 +74,16 @@ class _tuuhouScreenState extends State<tuuhouScreen> {
                   Form(
                     key: _formKey,
                     child: TextFormField(
+                      controller: _controller,
                       decoration: InputDecoration(
                         hintText: '通報理由を入力',
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      initialValue: ex,
+                      initialValue: null,
                       onChanged: (val) {
-                        setState(() => ex = val);
+                        setState(() => tuuhou = val);
                       },
                     ),
                   ),
@@ -88,7 +92,10 @@ class _tuuhouScreenState extends State<tuuhouScreen> {
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: 58,
                     child: InkWell(
-                      onTap: () async {},
+                      onTap: () async {
+                        await DatabaseService(uid).addTuuhou(tuuhou.trim(), widget.tuuhouAitenoUid, widget.myUid);
+                        _controller.clear();
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Color(0xFFed1b24),
