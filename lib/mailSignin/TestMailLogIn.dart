@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:machupichu/mailSignin/mailAuth.dart';
-import 'package:machupichu/mailSignin/reset.dart';
 
 class testLogIn extends StatefulWidget {
   final Function toggleView;
@@ -33,13 +32,14 @@ class _SignInState extends State<testLogIn> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('TEST',
-                  style: TextStyle(
-                      color: Colors.red, fontWeight: FontWeight.bold)),
+              Text(
+                'TEST',
+                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+              ),
               TextButton.icon(
                 icon: Icon(Icons.person),
                 label: Text('TEST新規登録画面へ'),
-                onPressed: () async {
+                onPressed: () async { 
                   widget.toggleView();
                 },
               )
@@ -156,7 +156,7 @@ class _SignInState extends State<testLogIn> {
                         SizedBox(height: 30),
                         Container(
                           decoration: BoxDecoration(
-                            color: Color(0xFFed1b24),
+                            color:Color(0xFFed1b24),
                             borderRadius: BorderRadius.circular(3),
                           ),
                           width: MediaQuery.of(context).size.width * 0.8,
@@ -190,18 +190,6 @@ class _SignInState extends State<testLogIn> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          child: Text('パスワードを忘れた場合'),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ResetScreen()));
-                          },
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),

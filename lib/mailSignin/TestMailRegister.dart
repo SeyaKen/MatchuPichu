@@ -15,11 +15,19 @@ class testRegister extends StatefulWidget {
 class _testRegisterState extends State<testRegister> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
+  var _usernameController = TextEditingController();
 
   String email = '';
   String password = '';
   dynamic error;
   bool eye = true;
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
 
   void sendOTP() async {
     EmailAuth.sessionName = "MachuPichuの認証コードです。";
@@ -110,7 +118,7 @@ class _testRegisterState extends State<testRegister> {
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: TextFormField(
                         validator: (val) =>
-                            val!.isEmpty || !val.contains('@g.chuo-u.ac.jp')
+                            val!.isEmpty
                                 ? '正しいメールアドレスを入力してください'
                                 : null,
                         onChanged: (val) {
@@ -142,8 +150,11 @@ class _testRegisterState extends State<testRegister> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: TextFormField(
+                            controller: _usernameController,
                             validator: (val) =>
-                                val!.length < 7 ? '7文字以上のパスワードを入力してください' : null,
+                                validateStructure(_usernameController.text)
+                                    ? null
+                                    : '8文字以上で、大文字、小文字、記号を含むパスワードを入力してください',
                             obscureText: eye,
                             onChanged: (val) {
                               setState(() => password = val);
@@ -201,10 +212,12 @@ class _testRegisterState extends State<testRegister> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              await _auth.registerWithEmailAndPassword(
-                                  context,
-                                  email.toString().trim(),
-                                  password.toString().trim());
+                              if (_formKey.currentState!.validate() && validateStructure(_usernameController.text)) {
+                                await _auth.registerWithEmailAndPassword(
+                                    context,
+                                    email.toString().trim(),
+                                    password.toString().trim());
+                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.8,

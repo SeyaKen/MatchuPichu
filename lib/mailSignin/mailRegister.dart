@@ -16,11 +16,18 @@ class mailRegister extends StatefulWidget {
 class _mailRegisterState extends State<mailRegister> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  var _usernameController = TextEditingController();
 
   String email = '';
   String password = '';
   dynamic error;
   bool eye = true;
+
+  bool validateStructure(String value) {
+        String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+        RegExp regExp = new RegExp(pattern);
+        return regExp.hasMatch(value);
+  }
 
   void sendOTP() async {
     EmailAuth.sessionName = "MachuPichuの認証コードです。";
@@ -140,8 +147,9 @@ class _mailRegisterState extends State<mailRegister> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: TextFormField(
+                            controller: _usernameController,
                             validator: (val) =>
-                                val!.length < 7 ? '7文字以上のパスワードを入力してください' : null,
+                              validateStructure(_usernameController.text) ? null : '8文字以上で、大文字、小文字、記号を含むパスワードを入力してください',
                             obscureText: eye,
                             onChanged: (val) {
                               setState(() => password = val);
@@ -189,7 +197,7 @@ class _mailRegisterState extends State<mailRegister> {
                     SizedBox(height: 30),
                     Container(
                       decoration: BoxDecoration(
-                        color: password.length >= 7 &&
+                        color: validateStructure(_usernameController.text) &&
                                 email.length > 15 &&
                                 email
                                     .substring(email.length - 15)
@@ -209,13 +217,7 @@ class _mailRegisterState extends State<mailRegister> {
                                   email.length > 15 &&
                                   email
                                       .substring(email.length - 15)
-                                      .contains('@g.chuo-u.ac.jp')) {
-                                if (email == 'a20.mpaf@g.chuo-u.ac.jp') {
-                                  await _auth.registerWithEmailAndPassword(
-                                      context,
-                                      email.toString().trim(),
-                                      password.toString().trim());
-                                } else {
+                                      .contains('@g.chuo-u.ac.jp') && validateStructure(_usernameController.text)) {
                                   sendOTP();
                                   Navigator.push(
                                       context,
@@ -226,8 +228,7 @@ class _mailRegisterState extends State<mailRegister> {
                                             Duration(seconds: 0),
                                       ));
                                 }
-                              }
-                            },
+                              },
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.8,
                               child: Center(
