@@ -117,112 +117,142 @@ class _HomeDetailState extends State<HomeDetail> {
               ),
             ],
           )),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1000),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(3.0, 0), // changes position of shadow
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(1000),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(3.0, 0), // changes position of shadow
+                ),
+              ],
             ),
-          ],
-        ),
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          backgroundColor: Colors.grey[200],
-          onPressed: () async {
-            if (this.m == '2') {
-              String uid = await FirebaseAuth.instance.currentUser!.uid;
+            width: 60,
+            height: 60,
+            child: FloatingActionButton(
+            backgroundColor: Colors.pink,
+            heroTag:'like',
+            child: const Icon(
+              Icons.favorite,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          )),
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(1000),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(3.0, 0), // changes position of shadow
+                ),
+              ],
+            ),
+            width: 60,
+            height: 60,
+            child: FloatingActionButton(
+              heroTag:'chat',
+              backgroundColor: Colors.grey[200],
+              onPressed: () async {
+                if (this.m == '2') {
+                  String uid = await FirebaseAuth.instance.currentUser!.uid;
 
-              final doc = await FirebaseFirestore.instance
-                  .collection('user')
-                  .doc(uid)
-                  .get();
+                  final doc = await FirebaseFirestore.instance
+                      .collection('user')
+                      .doc(uid)
+                      .get();
 
-              final doc1 = FirebaseFirestore.instance
-                  .collection("chatrooms")
-                  .doc(chatRoomId);
+                  final doc1 = FirebaseFirestore.instance
+                      .collection("chatrooms")
+                      .doc(chatRoomId);
 
-              try {
-                doc1.get().then((docSnapshot) => {
-                      this.midokuuuu = docSnapshot.get('${uid}midoku'),
-                      FirebaseFirestore.instance
-                          .collection("chatrooms")
-                          .doc(chatRoomId)
-                          .update({'${uid}midoku': 0}),
-                      FlutterAppBadger.updateBadgeCount(
-                          doc['notifications'] - this.midokuuuu),
-                    });
-              } catch (e) {
-                print(e.toString());
-              }
-              Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => chatScreen(
-                      widget.uid,
-                      widget.myUserUid,
-                      chatRoomId!,
-                      this.youName,
-                      ds!['imageURL'],
-                    ),
-                    transitionDuration: Duration(seconds: 0),
-                  ));
-            } else if (this.m == '1') {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return CupertinoAlertDialog(
-                        actions: [
+                  try {
+                    doc1.get().then((docSnapshot) => {
+                          this.midokuuuu = docSnapshot.get('${uid}midoku'),
+                          FirebaseFirestore.instance
+                              .collection("chatrooms")
+                              .doc(chatRoomId)
+                              .update({'${uid}midoku': 0}),
+                          FlutterAppBadger.updateBadgeCount(
+                              doc['notifications'] - this.midokuuuu),
+                        });
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => chatScreen(
+                          widget.uid,
+                          widget.myUserUid,
+                          chatRoomId!,
+                          this.youName,
+                          ds!['imageURL'],
+                        ),
+                        transitionDuration: Duration(seconds: 0),
+                      ));
+                } else if (this.m == '1') {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                            actions: [
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: const Text("閉じる"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                            title: Text(
+                                'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+                      });
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(actions: [
                           CupertinoDialogAction(
                             isDefaultAction: true,
-                            child: const Text("閉じる"),
+                            child: const Text("いいえ"),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ],
-                        title: Text(
-                            'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
-                  });
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return CupertinoAlertDialog(actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        child: const Text("いいえ"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      CupertinoDialogAction(
-                        textStyle: TextStyle(color: Colors.red),
-                        isDefaultAction: true,
-                        child: Text("はい"),
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___) => Mibunnshoumei(),
-                                transitionDuration: Duration(seconds: 0),
-                              ));
-                        },
-                      )
-                    ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
-                  });
-            }
-          },
-          child: Icon(
-            Icons.chat,
-            color: Colors.black,
-            size: 30,
+                          CupertinoDialogAction(
+                            textStyle: TextStyle(color: Colors.red),
+                            isDefaultAction: true,
+                            child: Text("はい"),
+                            onPressed: () async {
+                              Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) => Mibunnshoumei(),
+                                    transitionDuration: Duration(seconds: 0),
+                                  ));
+                            },
+                          )
+                        ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+                      });
+                }
+              },
+              child: Icon(
+                Icons.chat,
+                color: Colors.black,
+                size: 30,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: homeDetailStream,
