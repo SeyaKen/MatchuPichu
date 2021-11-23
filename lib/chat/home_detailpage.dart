@@ -158,12 +158,13 @@ class _HomeDetailState extends State<HomeDetail> {
                         Icons.favorite,
                         color: Colors.white,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         dss!['${widget.myUserUid}iine'] == 0
-                            ? setState(() {
+                            ? setState(() async {
                                 like = true;
+                                await DatabaseService(widget.myUserUid).updateIine(chatRoomId!);
                               })
-                            : setState(() {});
+                            : showダイアログをここで出す
                       },
                     )),
                 SizedBox(height: 25),

@@ -39,6 +39,13 @@ class DatabaseService extends ChangeNotifier {
         .snapshots();
   }
 
+  Future updateIine(String chatroomId) async {
+    return FirebaseFirestore.instance
+        .collection('chatrooms')
+        .doc(chatroomId)
+        .update({'${uid}iine': 1});
+  }
+
   Future updateUserSex(String sex) async {
     await brewCollection.doc(uid).update({
       'sex': sex,
