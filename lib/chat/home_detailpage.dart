@@ -24,6 +24,7 @@ class _HomeDetailState extends State<HomeDetail> {
   String? chatRoomId;
   late final a;
   late String m;
+  bool like = false;
 
   getChatRoomIdByUsernames(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
@@ -93,7 +94,8 @@ class _HomeDetailState extends State<HomeDetail> {
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => tuuhouScreen(widget.myUserUid, widget.uid),
+                        pageBuilder: (_, __, ___) =>
+                            tuuhouScreen(widget.myUserUid, widget.uid),
                         transitionDuration: Duration(seconds: 0),
                       ));
                 },
@@ -121,29 +123,33 @@ class _HomeDetailState extends State<HomeDetail> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(1000),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(3.0, 0), // changes position of shadow
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(1000),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(3.0, 0), // changes position of shadow
+                  ),
+                ],
+              ),
+              width: 60,
+              height: 60,
+              child: FloatingActionButton(
+                backgroundColor: Colors.pink,
+                heroTag: 'like',
+                child: const Icon(
+                  Icons.favorite,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-            width: 60,
-            height: 60,
-            child: FloatingActionButton(
-            backgroundColor: Colors.pink,
-            heroTag:'like',
-            child: const Icon(
-              Icons.favorite,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          )),
-          SizedBox(height: 20),
+                onPressed: () {
+                  setState(() {
+                    like = true;
+                  });
+                },
+              )),
+          SizedBox(height: 25),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(1000),
@@ -159,7 +165,7 @@ class _HomeDetailState extends State<HomeDetail> {
             width: 60,
             height: 60,
             child: FloatingActionButton(
-              heroTag:'chat',
+              heroTag: 'chat',
               backgroundColor: Colors.grey[200],
               onPressed: () async {
                 if (this.m == '2') {
@@ -220,28 +226,33 @@ class _HomeDetailState extends State<HomeDetail> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return CupertinoAlertDialog(actions: [
-                          CupertinoDialogAction(
-                            isDefaultAction: true,
-                            child: const Text("いいえ"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          CupertinoDialogAction(
-                            textStyle: TextStyle(color: Colors.red),
-                            isDefaultAction: true,
-                            child: Text("はい"),
-                            onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => Mibunnshoumei(),
-                                    transitionDuration: Duration(seconds: 0),
-                                  ));
-                            },
-                          )
-                        ], title: Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+                        return CupertinoAlertDialog(
+                            actions: [
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: const Text("いいえ"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                textStyle: TextStyle(color: Colors.red),
+                                isDefaultAction: true,
+                                child: Text("はい"),
+                                onPressed: () async {
+                                  Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) =>
+                                            Mibunnshoumei(),
+                                        transitionDuration:
+                                            Duration(seconds: 0),
+                                      ));
+                                },
+                              )
+                            ],
+                            title:
+                                Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
                       });
                 }
               },
@@ -270,22 +281,78 @@ class _HomeDetailState extends State<HomeDetail> {
                             color: Colors.white,
                             child: Column(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(1000),
-                                  child: SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width,
-                                      child: Image.network(
-                                        ds!['imageURL'],
-                                        fit: BoxFit.cover,
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(1000),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height:
+                                              MediaQuery.of(context).size.width,
+                                          child: Image.network(
+                                            ds!['imageURL'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      bottom: 0,
+                                      child: AnimatedOpacity(
+                                        opacity: like ? 1.0 : 0.0,
+                                        onEnd: () {
+                                          if (like)
+                                            setState(() {
+                                              like = false;
+                                            });
+                                        },
+                                        duration:
+                                            const Duration(milliseconds: 400),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(1000),
+                                          child: SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.8,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.8,
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: AnimatedContainer(
+                                                duration: Duration(milliseconds: 400),
+                                                color: Colors.pink
+                                                    .withOpacity(0.7),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.white,
+                                                    size: 150,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                     height: MediaQuery.of(context).size.height *

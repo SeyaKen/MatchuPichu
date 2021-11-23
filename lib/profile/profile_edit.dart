@@ -74,7 +74,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                         Column(
                           children: [
                             Stack(
-                              alignment: Alignment.center, children: [
+                              alignment: Alignment.center,
+                              children: [
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(1000),
                                 child: SizedBox(
