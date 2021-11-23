@@ -32,6 +32,13 @@ class DatabaseService extends ChangeNotifier {
         .snapshots();
   }
 
+  Future<Stream<QuerySnapshot>> fetchIine(String chatroomId) async {
+    return FirebaseFirestore.instance
+        .collection('chatrooms')
+        .where('chatRoomId', isEqualTo: chatroomId)
+        .snapshots();
+  }
+
   Future updateUserSex(String sex) async {
     await brewCollection.doc(uid).update({
       'sex': sex,

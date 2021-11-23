@@ -17,8 +17,8 @@ class HomeDetail extends StatefulWidget {
 }
 
 class _HomeDetailState extends State<HomeDetail> {
-  Stream<QuerySnapshot<Object?>>? homeDetailStream;
-  DocumentSnapshot? ds;
+  Stream<QuerySnapshot<Object?>>? homeDetailStream, iineStream;
+  DocumentSnapshot? ds, dss;
   String youName = '';
   int? midokuuuu;
   String? chatRoomId;
@@ -47,6 +47,10 @@ class _HomeDetailState extends State<HomeDetail> {
     setState(() {});
   }
 
+  getIine() async {
+    iineStream = await DatabaseService(widget.uid).fetchIine(this.chatRoomId!);
+  }
+
   @override
   void initState() {
     onScreenLoaded();
@@ -55,15 +59,19 @@ class _HomeDetailState extends State<HomeDetail> {
       'users': [widget.myUserUid, widget.uid],
       '${widget.myUserUid}midoku': 0,
       '${widget.uid}midoku': 0,
+      '${widget.myUserUid}iine': 0,
+      '${widget.uid}iine': 0,
       '${widget.myUserUid}nyuusitu': true,
       '${widget.uid}nyuusitu': false,
       '${widget.myUserUid}mute': false,
       '${widget.uid}mute': false,
       '${widget.myUserUid}block': false,
       '${widget.uid}block': false,
+      'chatRoomId': chatRoomId,
     };
     DatabaseService(widget.myUserUid)
         .createChatRoom(chatRoomId!, chatRoomInfoMap);
+    getIine();
     super.initState();
   }
 
@@ -119,152 +127,164 @@ class _HomeDetailState extends State<HomeDetail> {
               ),
             ],
           )),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(1000),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(3.0, 0), // changes position of shadow
+      floatingActionButton: StreamBuilder<QuerySnapshot>(
+          stream: iineStream,
+          builder: (context, snapshot1) {
+            if (snapshot1.data != null) {
+              this.dss = snapshot1.data!.docs[0];
+              print(snapshot1.error);
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1000),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(3.0, 0), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    width: 60,
+                    height: 60,
+                    child: FloatingActionButton(
+                      backgroundColor: Color(0xFFed1b24).withOpacity(0.77),
+                      heroTag: 'like',
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        dss!['${widget.myUserUid}iine'] == 0
+                            ? setState(() {
+                                like = true;
+                              })
+                            : setState(() {});
+                      },
+                    )),
+                SizedBox(height: 25),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(1000),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(3.0, 0), // changes position of shadow
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              width: 60,
-              height: 60,
-              child: FloatingActionButton(
-                backgroundColor: Colors.pink,
-                heroTag: 'like',
-                child: const Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    like = true;
-                  });
-                },
-              )),
-          SizedBox(height: 25),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(1000),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(3.0, 0), // changes position of shadow
+                  width: 60,
+                  height: 60,
+                  child: FloatingActionButton(
+                    heroTag: 'chat',
+                    backgroundColor: Colors.grey[200],
+                    onPressed: () async {
+                      if (this.m == '2') {
+                        String uid =
+                            await FirebaseAuth.instance.currentUser!.uid;
+
+                        final doc = await FirebaseFirestore.instance
+                            .collection('user')
+                            .doc(uid)
+                            .get();
+
+                        final doc1 = FirebaseFirestore.instance
+                            .collection("chatrooms")
+                            .doc(chatRoomId);
+
+                        try {
+                          doc1.get().then((docSnapshot) => {
+                                this.midokuuuu =
+                                    docSnapshot.get('${uid}midoku'),
+                                FirebaseFirestore.instance
+                                    .collection("chatrooms")
+                                    .doc(chatRoomId)
+                                    .update({'${uid}midoku': 0}),
+                                FlutterAppBadger.updateBadgeCount(
+                                    doc['notifications'] - this.midokuuuu),
+                              });
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => chatScreen(
+                                widget.uid,
+                                widget.myUserUid,
+                                chatRoomId!,
+                                this.youName,
+                                ds!['imageURL'],
+                              ),
+                              transitionDuration: Duration(seconds: 0),
+                            ));
+                      } else if (this.m == '1') {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("閉じる"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                  title: Text(
+                                      'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+                            });
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("いいえ"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      textStyle: TextStyle(color: Colors.red),
+                                      isDefaultAction: true,
+                                      child: Text("はい"),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  Mibunnshoumei(),
+                                              transitionDuration:
+                                                  Duration(seconds: 0),
+                                            ));
+                                      },
+                                    )
+                                  ],
+                                  title: Text(
+                                      '本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+                            });
+                      }
+                    },
+                    child: Icon(
+                      Icons.chat,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                  ),
                 ),
               ],
-            ),
-            width: 60,
-            height: 60,
-            child: FloatingActionButton(
-              heroTag: 'chat',
-              backgroundColor: Colors.grey[200],
-              onPressed: () async {
-                if (this.m == '2') {
-                  String uid = await FirebaseAuth.instance.currentUser!.uid;
-
-                  final doc = await FirebaseFirestore.instance
-                      .collection('user')
-                      .doc(uid)
-                      .get();
-
-                  final doc1 = FirebaseFirestore.instance
-                      .collection("chatrooms")
-                      .doc(chatRoomId);
-
-                  try {
-                    doc1.get().then((docSnapshot) => {
-                          this.midokuuuu = docSnapshot.get('${uid}midoku'),
-                          FirebaseFirestore.instance
-                              .collection("chatrooms")
-                              .doc(chatRoomId)
-                              .update({'${uid}midoku': 0}),
-                          FlutterAppBadger.updateBadgeCount(
-                              doc['notifications'] - this.midokuuuu),
-                        });
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                  Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => chatScreen(
-                          widget.uid,
-                          widget.myUserUid,
-                          chatRoomId!,
-                          this.youName,
-                          ds!['imageURL'],
-                        ),
-                        transitionDuration: Duration(seconds: 0),
-                      ));
-                } else if (this.m == '1') {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoAlertDialog(
-                            actions: [
-                              CupertinoDialogAction(
-                                isDefaultAction: true,
-                                child: const Text("閉じる"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                            title: Text(
-                                'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
-                      });
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoAlertDialog(
-                            actions: [
-                              CupertinoDialogAction(
-                                isDefaultAction: true,
-                                child: const Text("いいえ"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              CupertinoDialogAction(
-                                textStyle: TextStyle(color: Colors.red),
-                                isDefaultAction: true,
-                                child: Text("はい"),
-                                onPressed: () async {
-                                  Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (_, __, ___) =>
-                                            Mibunnshoumei(),
-                                        transitionDuration:
-                                            Duration(seconds: 0),
-                                      ));
-                                },
-                              )
-                            ],
-                            title:
-                                Text('本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
-                      });
-                }
-              },
-              child: Icon(
-                Icons.chat,
-                color: Colors.black,
-                size: 30,
-              ),
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
       body: StreamBuilder<QuerySnapshot>(
           stream: homeDetailStream,
           builder: (context, snapshot) {
@@ -336,8 +356,10 @@ class _HomeDetailState extends State<HomeDetail> {
                                                   .size
                                                   .width,
                                               child: AnimatedContainer(
-                                                duration: Duration(milliseconds: 400),
-                                                color: Colors.pink
+                                                duration:
+                                                    Duration(milliseconds: 400),
+                                                color: Color(0xFFed1b24)
+                                                    .withOpacity(0.77)
                                                     .withOpacity(0.7),
                                                 child: Center(
                                                   child: Icon(
