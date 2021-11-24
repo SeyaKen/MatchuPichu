@@ -105,6 +105,7 @@ class DatabaseService extends ChangeNotifier {
       'osirase': true,
       'kakunin': '0',
       'kakuninbool': false,
+      'iine': 0,
     });
   }
 
@@ -283,6 +284,7 @@ class DatabaseService extends ChangeNotifier {
         'name': doc['name'],
         'notifications': 0,
         'osirase': true,
+        'iine': 0,
       });
     } else {
       return await womenList.doc(uid).set({
@@ -297,6 +299,26 @@ class DatabaseService extends ChangeNotifier {
         'name': doc['name'],
         'notifications': 0,
         'osirase': true,
+        'iine': 0,
+      });
+    }
+  }
+
+  Future uploadIine(int? iine) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+
+    await brewCollection.doc(uid).update({
+      'iine': iine,
+    });
+
+    if (doc['sex'] == 'men') {
+      return await menList.doc(uid).update({
+        'iine': iine,
+      });
+    } else {
+      return await womenList.doc(uid).update({
+        'iine': iine,
       });
     }
   }

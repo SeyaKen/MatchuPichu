@@ -2,15 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:machupichu/chat/chatScreen.dart';
 import 'package:machupichu/chat/home_detailpage.dart';
-import 'package:machupichu/settings/mibunnshoumei.dart';
 import 'package:machupichu/services/database.dart';
-import 'package:machupichu/tuuhou/tuuhou.dart';
 
-int? notifications = 0;
+int? iine = 0;
 
 class iineList extends StatefulWidget {
   @override
@@ -61,13 +56,17 @@ class _iineListState extends State<iineList> {
                 itemCount: snapshot1.data!.docs.length,
                 itemBuilder: (context, index) {
                   if (0 == index) {
-                    notifications = 0;
+                    iine = 0;
                   }
                   DocumentSnapshot ds = snapshot1.data!.docs[index];
                   String uid = FirebaseAuth.instance.currentUser!.uid;
                   // 相手の名前を代入
                   String username =
                       ds.id.replaceAll(uid, '').replaceAll('_', '');
+                  iine = snapshot1.data!.docs.length;
+                  if (index + 1 == snapshot1.data!.docs.length) {
+                    DatabaseService(uid).uploadIine(iine);
+                  }
                   return iineRoomListTile(
                     this.myUserUid!,
                     ds['$username'],
