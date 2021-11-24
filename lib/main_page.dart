@@ -78,10 +78,10 @@ class _MainPageState extends State<MainPage> {
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(
-                            Icons.check_box_outline_blank ,
+                            Icons.favorite,
                             size: 30,
                           ),
-                          label: 'ご意見箱',
+                          label: 'いいね',
                         ),
                         BottomNavigationBarItem(
                           icon: Container(
