@@ -39,11 +39,21 @@ class DatabaseService extends ChangeNotifier {
         .snapshots();
   }
 
-  Future updateIine(String chatroomId) async {
+  Future updateIine(String chatroomId, aitenoUid) async {
     return FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(chatroomId)
-        .update({'${uid}iine': 1});
+        .update({'${aitenoUid}iine': 1});
+  }
+
+  // いいね一覧を取得するための関数
+  Future<Stream<QuerySnapshot>> getIineList() async {
+    String? myUserUid = await FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .where("users", arrayContains: myUserUid)
+        .where("${uid}iine", isEqualTo: 1)
+        .snapshots();
   }
 
   Future updateUserSex(String sex) async {

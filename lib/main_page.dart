@@ -5,7 +5,7 @@ import 'package:machupichu/chat/chatLists.dart';
 import 'package:machupichu/home/home_list_page.dart';
 import 'package:machupichu/profile/profile_page.dart';
 import 'package:machupichu/services/database.dart';
-import 'package:machupichu/telephone/telephone.dart';
+import 'package:machupichu/telephone/Second.dart';
 
 class MainPage extends StatefulWidget {
   int currenttab;
@@ -184,7 +184,7 @@ class _MainPageState extends State<MainPage> {
                     children: [
                       HomePageList(widget.myUserUid, widget.grade, widget.major,
                           widget.height1, widget.height2),
-                      Telephone(),
+                      iineList(),
                       chatLists(),
                       ProfilePage(),
                     ],
