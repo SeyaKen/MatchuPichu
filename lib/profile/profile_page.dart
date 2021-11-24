@@ -205,26 +205,36 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Column(
-                                children: [
-                                  Text('いいね!', style: TextStyle(fontSize: 12)),
-                                  Icon(
-                                    Icons.favorite,
-                                    size: 25,
-                                    color: Color(0xFFed1b24).withOpacity(0.77),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 5),
-                              Text(ds!['iine'].toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  )),
-                            ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'もらったいいねの数',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    ),
+                                    SizedBox(width: 10),
+                                    Icon(
+                                      Icons.favorite,
+                                      size: 25,
+                                      color: Color(0xFFed1b24).withOpacity(0.77),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 3),
+                                Text(ds!['iine'].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    )),
+                              ],
+                            ),
                           ),
                           Column(
                             children: [
