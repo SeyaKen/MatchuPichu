@@ -498,14 +498,14 @@ class _HomeDetailState extends State<HomeDetail> {
                                               ),
                                               Icon(
                                                 Icons.favorite,
-                                                size: 30,
+                                                size: 25,
                                                 color: Color(0xFFed1b24).withOpacity(0.77),
                                               ),
                                             ],
                                           ),
                                           SizedBox(width: 5),
                                           Text(
-                                            '20',
+                                            ds!['iine'].toString(),
                                             style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold,

@@ -57,7 +57,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               InkWell(
                                 onTap: () async {
-                                  await FirebaseFirestore.instance.collection('user').doc(uid).update({'osirase': false});
+                                  await FirebaseFirestore.instance
+                                      .collection('user')
+                                      .doc(uid)
+                                      .update({'osirase': false});
                                   Navigator.push(
                                       context,
                                       PageRouteBuilder(
@@ -86,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         child: ClipRRect(
                                           borderRadius:
-                                            BorderRadius.circular(30000000),
+                                              BorderRadius.circular(30000000),
                                           child: Container(
                                             height: 10,
                                             width: 10,
@@ -105,22 +108,29 @@ class _ProfilePageState extends State<ProfilePage> {
                               InkWell(
                                 onDoubleTap: () {
                                   FirebaseAuth.instance.currentUser!.email ==
-                            'a20.mpaf@g.chuo-u.ac.jp'
-                        ? Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => kanriListScreen(),
-                              transitionDuration: Duration(seconds: 0),
-                            ))
-                        : null;
+                                          'a20.mpaf@g.chuo-u.ac.jp'
+                                      ? Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (_, __, ___) =>
+                                                kanriListScreen(),
+                                            transitionDuration:
+                                                Duration(seconds: 0),
+                                          ))
+                                      : null;
                                 },
-                                onTap: () async{
-                                  await FirebaseFirestore.instance.collection('user').doc(uid).update({'kakuninbool': false});
+                                onTap: () async {
+                                  await FirebaseFirestore.instance
+                                      .collection('user')
+                                      .doc(uid)
+                                      .update({'kakuninbool': false});
                                   Navigator.push(
                                       context,
                                       PageRouteBuilder(
-                                        pageBuilder: (_, __, ___) => SettingList(),
-                                        transitionDuration: Duration(seconds: 0),
+                                        pageBuilder: (_, __, ___) =>
+                                            SettingList(),
+                                        transitionDuration:
+                                            Duration(seconds: 0),
                                       ));
                                 },
                                 child: Icon(
@@ -194,6 +204,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ],
                             ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Column(
+                                children: [
+                                  Text('いいね!', style: TextStyle(fontSize: 12)),
+                                  Icon(
+                                    Icons.favorite,
+                                    size: 25,
+                                    color: Color(0xFFed1b24).withOpacity(0.77),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 5),
+                              Text(ds!['iine'].toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  )),
+                            ],
                           ),
                           Column(
                             children: [
