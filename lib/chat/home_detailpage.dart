@@ -72,6 +72,8 @@ class _HomeDetailState extends State<HomeDetail> {
       'chatRoomId': chatRoomId,
       '${widget.uid}': this.You!.docs[0]["imageURL"],
       '${widget.myUserUid}': this.I!.docs[0]["imageURL"],
+      "${widget.myUserUid}name": I!.docs[0]["name"],
+      "${widget.uid}name": You!.docs[0]['name'],
     };
     DatabaseService(widget.myUserUid)
         .createChatRoom(chatRoomId!, chatRoomInfoMap);
@@ -144,8 +146,7 @@ class _HomeDetailState extends State<HomeDetail> {
               this.dss = snapshot1.data!.docs[0];
               print(snapshot1.error);
             }
-            return snapshot1.hasData
-                ? Column(
+            return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
@@ -316,8 +317,7 @@ class _HomeDetailState extends State<HomeDetail> {
                         ),
                       ),
                     ],
-                  )
-                : Center(child: CircularProgressIndicator());
+                  );
           }),
       body: StreamBuilder<QuerySnapshot>(
           stream: homeDetailStream,

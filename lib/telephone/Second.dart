@@ -68,18 +68,11 @@ class _iineListState extends State<iineList> {
                   // 相手の名前を代入
                   String username =
                       ds.id.replaceAll(uid, '').replaceAll('_', '');
-                  print('あああああああああああ');
-                  print(username);
-                  print(this.myUserUid!);
-                  print(ds.id
-                      .replaceAll(this.myUserUid!, '')
-                      .replaceAll('_', ''));
-                  print(ds['$username']);
                   return iineRoomListTile(
-                    username,
                     this.myUserUid!,
                     ds['$username'],
-                    ds.id.replaceAll(this.myUserUid!, '').replaceAll('_', ''),
+                    ds['${username}name'],
+                    username,
                   );
                 },
               )
@@ -105,17 +98,16 @@ class _iineListState extends State<iineList> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'トーク',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: Colors.white,
+                    Flexible(
+                      child: Text(
+                        'いいねをくれた人',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.33,
-                  ),
                 ],
               ),
             )),
@@ -205,7 +197,7 @@ class _iineRoomListTileState extends State<iineRoomListTile> {
             context,
             PageRouteBuilder(
               pageBuilder: (_, __, ___) =>
-                  HomeDetail(widget.aitenoUid, widget.jibunnnoUid),
+                  HomeDetail(widget.jibunnnoUid, widget.aitenoUid),
               transitionDuration: Duration(seconds: 0),
             ));
       },

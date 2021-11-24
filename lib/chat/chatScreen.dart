@@ -119,8 +119,6 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
       QuerySnapshot You = await DatabaseService(widget.name)
           .getUserInfo(widget.name, widget.chatWithUsername);
 
-      String i = I.docs[0]["imageURL"];
-      String you = You.docs[0]["imageURL"];
       String iName = I.docs[0]["name"];
       String youName = You.docs[0]['name'];
 
@@ -147,8 +145,6 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
           "lastMessage": message,
           "lastMessageSendTs": lastMessageTs,
           "lastMessageSendBy": widget.name,
-          "${widget.name}": i,
-          "${widget.chatWithUsername}": you,
           "${widget.name}I": iName,
           "${widget.chatWithUsername}You": youName,
           "sendBy": widget.name,
@@ -178,8 +174,6 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
           .getUserInfo(widget.chatWithUsername, widget.name);
       QuerySnapshot You = await DatabaseService(widget.name)
           .getUserInfo(widget.name, widget.chatWithUsername);
-      String i = I.docs[0]["imageURL"];
-      String you = You.docs[0]["imageURL"];
       String iName = I.docs[0]["name"];
       String youName = You.docs[0]['name'];
 
@@ -201,8 +195,6 @@ class _chatScreenState extends State<chatScreen> with WidgetsBindingObserver {
           "lastMessage": message,
           "lastMessageSendTs": lastMessageTs,
           "lastMessageSendBy": widget.name,
-          "${widget.name}": i,
-          "${widget.chatWithUsername}": you,
           "${widget.name}I": iName,
           "${widget.chatWithUsername}You": youName,
           "sendBy": widget.name,

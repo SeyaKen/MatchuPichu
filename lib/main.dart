@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
               if (widget.hitokoto != null) {
                 return MainPage(0 ,'a', 'a', 'a', 0, 0);
               } else {
-                return mailAuthenticate();
+                return TestAuthenticate();
               }
             },
           ),
