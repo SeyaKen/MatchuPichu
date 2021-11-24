@@ -53,7 +53,8 @@ class _HomeDetailState extends State<HomeDetail> {
   }
 
   getIine() async {
-    this.iineStream = await DatabaseService(widget.uid).fetchIine(this.chatRoomId!);
+    this.iineStream =
+        await DatabaseService(widget.uid).fetchIine(this.chatRoomId!);
   }
 
   createChatRoom() {
@@ -147,177 +148,169 @@ class _HomeDetailState extends State<HomeDetail> {
               print(snapshot1.error);
             }
             return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1000),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(
-                                    3.0, 0), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          width: 60,
-                          height: 60,
-                          child: FloatingActionButton(
-                            backgroundColor:
-                                Color(0xFFed1b24).withOpacity(0.77),
-                            heroTag: 'like',
-                            child: const Icon(
-                              Icons.favorite,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              dss!['${widget.uid}iine'] == 0
-                                  ? setState(() {
-                                      like = true;
-                                      DatabaseService(widget.myUserUid)
-                                          .updateIine(chatRoomId!, widget.uid);
-                                    })
-                                  : showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return CupertinoAlertDialog(
-                                            actions: [
-                                              CupertinoDialogAction(
-                                                isDefaultAction: true,
-                                                child: const Text("閉じる"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                            title:
-                                                Text('いいねは一人につき一回までしかできません。'));
-                                      });
-                            },
-                          )),
-                      SizedBox(height: 25),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1000),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(3.0, 0), // changes position of shadow
-                            ),
-                          ],
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1000),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(3.0, 0), // changes position of shadow
                         ),
-                        width: 60,
-                        height: 60,
-                        child: FloatingActionButton(
-                          heroTag: 'chat',
-                          backgroundColor: Colors.grey[200],
-                          onPressed: () async {
-                            if (this.m == '2') {
-                              String uid =
-                                  await FirebaseAuth.instance.currentUser!.uid;
-
-                              final doc = await FirebaseFirestore.instance
-                                  .collection('user')
-                                  .doc(uid)
-                                  .get();
-
-                              final doc1 = FirebaseFirestore.instance
-                                  .collection("chatrooms")
-                                  .doc(chatRoomId);
-
-                              try {
-                                doc1.get().then((docSnapshot) => {
-                                      this.midokuuuu =
-                                          docSnapshot.get('${uid}midoku'),
-                                      FirebaseFirestore.instance
-                                          .collection("chatrooms")
-                                          .doc(chatRoomId)
-                                          .update({'${uid}midoku': 0}),
-                                      FlutterAppBadger.updateBadgeCount(
-                                          doc['notifications'] -
-                                              this.midokuuuu),
-                                    });
-                              } catch (e) {
-                                print(e.toString());
-                              }
-                              Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => chatScreen(
-                                      widget.uid,
-                                      widget.myUserUid,
-                                      chatRoomId!,
-                                      this.youName,
-                                      ds!['imageURL'],
+                      ],
+                    ),
+                    width: 60,
+                    height: 60,
+                    child: FloatingActionButton(
+                      backgroundColor: Color(0xFFed1b24).withOpacity(0.77),
+                      heroTag: 'like',
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        dss!['${widget.uid}iine'] == 0
+                            ? setState(() {
+                                like = true;
+                                DatabaseService(widget.myUserUid)
+                                    .updateIine(chatRoomId!, widget.uid);
+                              })
+                            : showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CupertinoAlertDialog(actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("閉じる"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                    transitionDuration: Duration(seconds: 0),
-                                  ));
-                            } else if (this.m == '1') {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CupertinoAlertDialog(
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            child: const Text("閉じる"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                        title: Text(
-                                            'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
-                                  });
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CupertinoAlertDialog(
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            child: const Text("いいえ"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          CupertinoDialogAction(
-                                            textStyle:
-                                                TextStyle(color: Colors.red),
-                                            isDefaultAction: true,
-                                            child: Text("はい"),
-                                            onPressed: () async {
-                                              Navigator.push(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    pageBuilder: (_, __, ___) =>
-                                                        Mibunnshoumei(),
-                                                    transitionDuration:
-                                                        Duration(seconds: 0),
-                                                  ));
-                                            },
-                                          )
-                                        ],
-                                        title: Text(
-                                            '本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
-                                  });
-                            }
-                          },
-                          child: Icon(
-                            Icons.chat,
-                            color: Colors.black,
-                            size: 30,
-                          ),
-                        ),
+                                  ], title: Text('いいねは一人につき一回までしかできません。'));
+                                });
+                      },
+                    )),
+                SizedBox(height: 25),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(1000),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(3.0, 0), // changes position of shadow
                       ),
                     ],
-                  );
+                  ),
+                  width: 60,
+                  height: 60,
+                  child: FloatingActionButton(
+                    heroTag: 'chat',
+                    backgroundColor: Colors.grey[200],
+                    onPressed: () async {
+                      if (this.m == '2') {
+                        String uid =
+                            await FirebaseAuth.instance.currentUser!.uid;
+
+                        final doc = await FirebaseFirestore.instance
+                            .collection('user')
+                            .doc(uid)
+                            .get();
+
+                        final doc1 = FirebaseFirestore.instance
+                            .collection("chatrooms")
+                            .doc(chatRoomId);
+
+                        try {
+                          doc1.get().then((docSnapshot) => {
+                                this.midokuuuu =
+                                    docSnapshot.get('${uid}midoku'),
+                                FirebaseFirestore.instance
+                                    .collection("chatrooms")
+                                    .doc(chatRoomId)
+                                    .update({'${uid}midoku': 0}),
+                                FlutterAppBadger.updateBadgeCount(
+                                    doc['notifications'] - this.midokuuuu),
+                              });
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => chatScreen(
+                                widget.uid,
+                                widget.myUserUid,
+                                chatRoomId!,
+                                this.youName,
+                                ds!['imageURL'],
+                              ),
+                              transitionDuration: Duration(seconds: 0),
+                            ));
+                      } else if (this.m == '1') {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("閉じる"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                  title: Text(
+                                      'ただいま審査中です。審査が終わり次第開始できます。しばらくお待ちください。※審査終了の通知が来てからもこのポップアップが出る場合は一度アプリを完全に閉じてから、もう一度お試しください。'));
+                            });
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      isDefaultAction: true,
+                                      child: const Text("いいえ"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      textStyle: TextStyle(color: Colors.red),
+                                      isDefaultAction: true,
+                                      child: Text("はい"),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  Mibunnshoumei(),
+                                              transitionDuration:
+                                                  Duration(seconds: 0),
+                                            ));
+                                      },
+                                    )
+                                  ],
+                                  title: Text(
+                                      '本人・年齢確認後でないとトークできません。本人・年齢確認画面に移動しますか？'));
+                            });
+                      }
+                    },
+                    child: Icon(
+                      Icons.chat,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
+            );
           }),
       body: StreamBuilder<QuerySnapshot>(
           stream: homeDetailStream,
@@ -416,60 +409,110 @@ class _HomeDetailState extends State<HomeDetail> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.85,
-                                  child: Text(
-                                    ds!['name'],
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.01),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.85,
                                   child: Row(
-                                    children: [
-                                      Text(
-                                        ds!['grade'],
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.01),
-                                      Text(
-                                        ds!['major'],
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.01),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.85,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Flexible(
-                                        child: Text(
-                                          ds!['hitokoto'],
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              ds!['name'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 25,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.01),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.85,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    ds!['grade'],
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.01),
+                                                  Text(
+                                                    ds!['major'],
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.01),
+                                            SizedBox(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      ds!['hitokoto'],
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Colors.black,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text(
+                                                'いいね!',
+                                                style: TextStyle(fontSize: 12)
+                                              ),
+                                              Icon(
+                                                Icons.favorite,
+                                                size: 30,
+                                                color: Color(0xFFed1b24).withOpacity(0.77),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            '20',
+                                            style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              fontSize: 20,
+                                            )
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
