@@ -73,8 +73,8 @@ class _HomeDetailState extends State<HomeDetail> {
       '${widget.myUserUid}block': false,
       '${widget.uid}block': false,
       'chatRoomId': chatRoomId,
-      '${widget.uid}': this.You!.docs[0]["imageURL"],
-      '${widget.myUserUid}': this.I!.docs[0]["imageURL"],
+      '${widget.uid}': this.You!.docs[0]["imageURL"][0],
+      '${widget.myUserUid}': this.I!.docs[0]["imageURL"][0],
       "${widget.myUserUid}name": I!.docs[0]["name"],
       "${widget.uid}name": You!.docs[0]['name'],
     };
@@ -249,7 +249,7 @@ class _HomeDetailState extends State<HomeDetail> {
                                 widget.myUserUid,
                                 chatRoomId!,
                                 this.youName,
-                                ds!['imageURL'],
+                                ds!['imageURL'][0],
                               ),
                               transitionDuration: Duration(seconds: 0),
                             ));
