@@ -332,10 +332,11 @@ class _HomeDetailState extends State<HomeDetail> {
                             child: Column(
                               children: [
                                 Stack(
+                                  alignment: Alignment.center,
                                   children: [
                                     CarouselWithDotsPage(ds!['imageURL']),
                                     Positioned(
-                                      bottom: 0,
+                                      top: 0,
                                       child: AnimatedOpacity(
                                         opacity: like ? 1.0 : 0.0,
                                         onEnd: () {
@@ -348,7 +349,7 @@ class _HomeDetailState extends State<HomeDetail> {
                                             const Duration(milliseconds: 400),
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(1000),
+                                              BorderRadius.circular(10),
                                           child: SizedBox(
                                             height: MediaQuery.of(context)
                                                     .size
@@ -680,13 +681,9 @@ class _CarouselWithDotsPageState extends State<CarouselWithDotsPage> {
             child: SizedBox(
               height: MediaQuery.of(context).size.width * 0.8,
               width: MediaQuery.of(context).size.width * 0.8,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                child: Image.network(
-                  item,
-                  fit: BoxFit.cover,
-                ),
+              child: Image.network(
+                item,
+                fit: BoxFit.cover,
               ),
             ),
           ),
