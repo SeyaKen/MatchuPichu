@@ -162,7 +162,11 @@ class _ImageListEditState extends State<ImageListEdit> {
                 bottom: 50,
                 child: ElevatedButton(
                     onPressed: () async {
-                      await editService(uid).updateImage();
+                      try{
+                        await editService(uid).updateImage();
+                      }catch(e){
+                        print(e.toString());
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
