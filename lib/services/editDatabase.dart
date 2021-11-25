@@ -167,15 +167,15 @@ class editService extends ChangeNotifier {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
     await brewCollection.doc(uid).update({
-      'imageURL': imageURL,
+      'imageURL': FieldValue.arrayUnion([imageURL]),
     });
     if (doc['sex'] == 'men') {
       await menList.doc(uid).update({
-        'imageURL': imageURL,
+        'imageURL': FieldValue.arrayUnion([imageURL]),
       });
     } else {
       await womenList.doc(uid).update({
-        'imageURL': imageURL,
+        'imageURL': FieldValue.arrayUnion([imageURL]),
       });
     }
     CollectionReference ref =

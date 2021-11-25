@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:machupichu/edit/gradeedit.dart';
 import 'package:machupichu/edit/majoredit.dart';
 import 'package:machupichu/edit/nameedit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:machupichu/services/editDatabase.dart';
 import 'package:machupichu/edit/exedit.dart';
 import 'package:machupichu/edit/heightedit.dart';
 import 'package:machupichu/edit/hitokotoedit.dart';
+import 'package:machupichu/profile/image_list_edit.dart';
 
 class ProfileEdit extends StatefulWidget {
   @override
@@ -17,7 +17,6 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-  final picker = ImagePicker();
   Stream<QuerySnapshot<Object?>>? profileListsStream;
   DocumentSnapshot? ds;
 
@@ -79,10 +78,16 @@ class _ProfileEditState extends State<ProfileEdit> {
                               children: [
                               CarouselWithDotsPage(ds!['imageURL']),
                               Positioned(
-                                bottom: 30,
+                                bottom: 40,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      await editService(uid).updateImage();
+                                      Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (_, __, ___) =>
+                                          ImageListEdit(),
+                                      transitionDuration: Duration(seconds: 0),
+                                    ));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),

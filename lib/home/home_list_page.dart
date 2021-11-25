@@ -120,7 +120,7 @@ class _HomePageListState extends State<HomePageList> {
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           child: Image.network(
-                                            ds['imageURL'],
+                                            ds['imageURL'][0],
                                             fit: BoxFit.cover,
                                           ),
                                         ),
