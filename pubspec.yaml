@@ -48,9 +48,9 @@ dependencies:
   pub_semver:
   package_info:
   flutter_slidable:
+  carousel_slider: ^4.0.0
   flutter_localizations:
     sdk: flutter
-  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:

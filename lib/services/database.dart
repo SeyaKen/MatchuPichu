@@ -196,7 +196,7 @@ class DatabaseService extends ChangeNotifier {
 
     // firebaseに追加
     await brewCollection.doc(uid).update({
-      'imageURL': imageURL,
+      'imageURL': [imageURL],
     });
     fetchImage();
   }
@@ -272,6 +272,7 @@ class DatabaseService extends ChangeNotifier {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
     if (doc['sex'] == 'men') {
+      print('エラー');
       return await menList.doc(uid).set({
         'sex': doc['sex'],
         'uid': uid,
@@ -279,7 +280,7 @@ class DatabaseService extends ChangeNotifier {
         'grade': doc['grade'],
         'height': doc['height'],
         'hitokoto': doc['hitokoto'],
-        'imageURL': doc['imageURL'],
+        'imageURL': [doc['imageURL'][0]],
         'major': doc['major'],
         'name': doc['name'],
         'notifications': 0,
@@ -294,7 +295,7 @@ class DatabaseService extends ChangeNotifier {
         'grade': doc['grade'],
         'height': doc['height'],
         'hitokoto': doc['hitokoto'],
-        'imageURL': doc['imageURL'],
+        'imageURL': [doc['imageURL'][0]],
         'major': doc['major'],
         'name': doc['name'],
         'notifications': 0,
