@@ -162,12 +162,7 @@ class _ImageListEditState extends State<ImageListEdit> {
                 bottom: 50,
                 child: ElevatedButton(
                     onPressed: () async {
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => ImageListEdit(),
-                            transitionDuration: Duration(seconds: 0),
-                          ));
+                      await editService(uid).updateImage();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -176,12 +171,12 @@ class _ImageListEditState extends State<ImageListEdit> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
-                          color: Color(0xFFed1b24).withOpacity(0.77),
+                          color: Colors.white,
                         ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        primary: Color(0xFFed1b24).withOpacity(0.77),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10000.0),
                         ))),
