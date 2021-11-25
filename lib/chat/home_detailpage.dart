@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -324,33 +326,14 @@ class _HomeDetailState extends State<HomeDetail> {
                     child: SafeArea(
                       child: Column(
                         children: [
+                          SizedBox(height: 20),
                           Container(
                             color: Colors.white,
                             child: Column(
                               children: [
                                 Stack(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(1000),
-                                      child: SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.8,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.8,
-                                        child: SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height:
-                                              MediaQuery.of(context).size.width,
-                                          child: Image.network(
-                                            ds!['imageURL'],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    CarouselWithDotsPage(ds!['imageURL']),
                                     Positioned(
                                       bottom: 0,
                                       child: AnimatedOpacity(
@@ -488,30 +471,28 @@ class _HomeDetailState extends State<HomeDetail> {
                                         ),
                                       ),
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           Column(
                                             children: [
-                                              Text(
-                                                'いいね!',
-                                                style: TextStyle(fontSize: 12)
-                                              ),
+                                              Text('いいね!',
+                                                  style:
+                                                      TextStyle(fontSize: 12)),
                                               Icon(
                                                 Icons.favorite,
                                                 size: 25,
-                                                color: Color(0xFFed1b24).withOpacity(0.77),
+                                                color: Color(0xFFed1b24)
+                                                    .withOpacity(0.77),
                                               ),
                                             ],
                                           ),
                                           SizedBox(width: 5),
-                                          Text(
-                                            ds!['iine'].toString(),
-                                            style: TextStyle(
-                                              fontWeight:
-                                              FontWeight.bold,
-                                              fontSize: 20,
-                                            )
-                                          ),
+                                          Text(ds!['iine'].toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              )),
                                         ],
                                       ),
                                     ],
@@ -676,6 +657,76 @@ class _HomeDetailState extends State<HomeDetail> {
                   )
                 : Center(child: CircularProgressIndicator());
           }),
+    );
+  }
+}
+
+class CarouselWithDotsPage extends StatefulWidget {
+  List<dynamic> imgList;
+  CarouselWithDotsPage(this.imgList);
+
+  @override
+  _CarouselWithDotsPageState createState() => _CarouselWithDotsPageState();
+}
+
+class _CarouselWithDotsPageState extends State<CarouselWithDotsPage> {
+  int _current = 0;
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> imageSliders = widget.imgList
+        .map(
+          (item) => ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.width * 0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                child: Image.network(
+                  item,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        )
+        .toList();
+    return Column(
+      children: [
+        CarouselSlider(
+          items: imageSliders,
+          options: CarouselOptions(
+              height: MediaQuery.of(context).size.width * 0.8,
+              autoPlay: false,
+              enlargeCenterPage: true,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              }),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widget.imgList.map((url) {
+            int index = widget.imgList.indexOf(url);
+            return Container(
+              width: 8,
+              height: 8,
+              margin: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 3,
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _current == index
+                    ? Color.fromRGBO(0, 0, 0, 0.9)
+                    : Color.fromRGBO(0, 0, 0, 0.4),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }

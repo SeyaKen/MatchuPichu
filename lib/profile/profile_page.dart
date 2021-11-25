@@ -184,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     width: 110,
                                     height: 110,
                                     child: Image.network(
-                                      ds!['imageURL'],
+                                      ds!['imageURL'][0],
                                       fit: BoxFit.cover,
                                     ),
                                   ),
