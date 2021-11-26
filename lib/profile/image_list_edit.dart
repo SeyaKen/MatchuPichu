@@ -103,10 +103,7 @@ class _ImageListEditState extends State<ImageListEdit> {
                                         child: Column(
                                           children: [
                                             SizedBox(height: 20),
-                                            i != 0 &&
-                                                    i !=
-                                                        ds!['imageURL'].length -
-                                                            1
+                                            i != 0 && i * 2 - 1 != ds!['imageURL'].length - 1
                                                 ? Center(
                                                     child: Container(
                                                       width:
@@ -173,11 +170,7 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                       ),
                                                     ),
                                                   )
-                                                : i != 0 &&
-                                                        i * 2 - 1 ==
-                                                            ds!['imageURL']
-                                                                    .length -
-                                                                1
+                                                : i != 0 && i * 2 - 1 == ds!['imageURL'].length - 1
                                                     ? Container(
                                                         width: MediaQuery.of(
                                                                     context)
