@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:machupichu/services/database.dart';
 import 'package:machupichu/services/editDatabase.dart';
 
 class ImageListEdit extends StatefulWidget {
@@ -103,7 +105,10 @@ class _ImageListEditState extends State<ImageListEdit> {
                                         child: Column(
                                           children: [
                                             SizedBox(height: 20),
-                                            i != 0 && i * 2 - 1 != ds!['imageURL'].length - 1
+                                            i != 0 &&
+                                                    i * 2 - 1 !=
+                                                        ds!['imageURL'].length -
+                                                            1
                                                 ? Center(
                                                     child: Container(
                                                       width:
@@ -116,61 +121,155 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          Container(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.35,
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.35,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child:
-                                                                  Image.network(
-                                                                ds!['imageURL']
-                                                                    [i * 2 - 1],
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                          Stack(
+                                                            children: [
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.35,
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.35,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  child: Image
+                                                                      .network(
+                                                                    ds!['imageURL']
+                                                                        [i * 2 -
+                                                                            1],
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              Positioned(
+                                                                top: 7,
+                                                                right: 10,
+                                                                child: InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    DatabaseService(
+                                                                            uid)
+                                                                        .profilePictureControll(
+                                                                            ds,
+                                                                            i * 2 -
+                                                                                1);
+                                                                  },
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(1000)),
+                                                                    child:
+                                                                        Container(
+                                                                      width: 30,
+                                                                      height:
+                                                                          30,
+                                                                      color: Colors
+                                                                          .white
+                                                                          .withOpacity(
+                                                                              0.5),
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .clear_rounded,
+                                                                        size:
+                                                                            25,
+                                                                        color: Color(0xFFed1b24)
+                                                                            .withOpacity(0.77),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
                                                           ),
-                                                          Container(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.35,
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.35,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child:
-                                                                  Image.network(
-                                                                ds!['imageURL']
-                                                                    [i * 2],
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                          Stack(
+                                                            children: [
+                                                              Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.35,
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.35,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  child: Image
+                                                                      .network(
+                                                                    ds!['imageURL']
+                                                                        [i * 2],
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              Positioned(
+                                                                top: 7,
+                                                                right: 10,
+                                                                child: InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    DatabaseService(
+                                                                            uid)
+                                                                        .profilePictureControll(
+                                                                            ds,
+                                                                            i * 2);
+                                                                  },
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(1000)),
+                                                                    child:
+                                                                        Container(
+                                                                      width: 30,
+                                                                      height:
+                                                                          30,
+                                                                      color: Colors
+                                                                          .white
+                                                                          .withOpacity(
+                                                                              0.5),
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .clear_rounded,
+                                                                        size:
+                                                                            25,
+                                                                        color: Color(0xFFed1b24)
+                                                                            .withOpacity(0.77),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                   )
-                                                : i != 0 && i * 2 - 1 == ds!['imageURL'].length - 1
+                                                : i != 0 &&
+                                                        i * 2 - 1 ==
+                                                            ds!['imageURL']
+                                                                    .length -
+                                                                1
                                                     ? Container(
                                                         width: MediaQuery.of(
                                                                     context)
@@ -182,55 +281,159 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Container(
+                                                            Stack(
+                                                              children: [
+                                                                Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.35,
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.35,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                    child: Image
+                                                                        .network(
+                                                                      ds!['imageURL']
+                                                                          [
+                                                                          i * 2 -
+                                                                              1],
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Positioned(
+                                                                  top: 7,
+                                                                  right: 10,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      DatabaseService(uid).profilePictureControll(
+                                                                          ds,
+                                                                          i * 2 -
+                                                                              1);
+                                                                    },
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(1000)),
+                                                                      child:
+                                                                          Container(
+                                                                        width:
+                                                                            30,
+                                                                        height:
+                                                                            30,
+                                                                        color: Colors
+                                                                            .white
+                                                                            .withOpacity(0.5),
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .clear_rounded,
+                                                                          size:
+                                                                              25,
+                                                                          color:
+                                                                              Color(0xFFed1b24).withOpacity(0.77),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Stack(
+                                                        children: [
+                                                          CupertinoContextMenu(
+                                                            actions: [
+                                                              CupertinoContextMenuAction(
+                                                                child: const Text('写真を変更する'),
+                                                                onPressed: () {
+                                                                  
+                                                                },
+                                                              ),
+                                                              CupertinoContextMenuAction(
+                                                                child: const Text('キャンセル'),
+                                                                onPressed: () {
+                                                                  Navigator.pop(context);
+                                                                },
+                                                              ),
+                                                            ],
+                                                            child: Container(
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .width *
-                                                                  0.35,
+                                                                  0.8,
                                                               height: MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .width *
-                                                                  0.35,
+                                                                  0.8,
                                                               child: ClipRRect(
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
                                                                             5),
-                                                                child: Image
-                                                                    .network(
+                                                                child:
+                                                                    Image.network(
                                                                   ds!['imageURL']
-                                                                      [i * 2 -
-                                                                          1],
+                                                                      [i],
                                                                   fit: BoxFit
                                                                       .cover,
                                                                 ),
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    : Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.8,
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.8,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          child: Image.network(
-                                                            ds!['imageURL'][i],
-                                                            fit: BoxFit.cover,
                                                           ),
-                                                        ),
+                                                          Positioned(
+                                                            top: 10,
+                                                            right: 13,
+                                                            child: InkWell(
+                                                              onTap: () async {
+                                                                DatabaseService(
+                                                                        uid)
+                                                                    .profilePictureControll(
+                                                                        ds, i);
+                                                              },
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            1000)),
+                                                                child:
+                                                                    Container(
+                                                                  width: 30,
+                                                                  height: 30,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .clear_rounded,
+                                                                    size: 25,
+                                                                    color: Color(
+                                                                            0xFFed1b24)
+                                                                        .withOpacity(
+                                                                            0.77),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
                                                       )
                                           ],
                                         ),

@@ -171,6 +171,81 @@ class DatabaseService extends ChangeNotifier {
     }
   }
 
+  Future profilePictureUpdate(DocumentSnapshot<Object?>? ds, int i) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+
+    if(ds!['imageURL'][i] != 'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56') {
+      await FirebaseStorage.instance
+        .refFromURL(ds['imageURL'][i]).delete();
+    }
+
+    var val = [];
+    val.add('${ds['imageURL'][i]}');
+
+    if (doc['sex'] == 'men') {
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
+      await menList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayUnion(  )});
+      await menList.doc(uid).update({"imageURL": FieldValue.arrayUnion(  )});
+    } else {
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
+      await womenList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayUnion(  )});
+      await womenList.doc(uid).update({"imageURL": FieldValue.arrayUnion(  )});
+    }
+  }
+
+  Future profilePictureControll(DocumentSnapshot<Object?>? ds, int i) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+
+    await FirebaseStorage.instance
+        .refFromURL(ds!['imageURL'][i]).delete();
+
+    var val = [];
+    val.add('${ds['imageURL'][i]}');
+
+    if (doc['sex'] == 'men') {
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
+      return await menList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+    } else {
+      await brewCollection
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
+      return await womenList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+    }
+  }
+
+  Future uploadIine(int? iine) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+
+    await brewCollection.doc(uid).update({
+      'iine': iine,
+    });
+
+    if (doc['sex'] == 'men') {
+      return await menList.doc(uid).update({
+        'iine': iine,
+      });
+    } else {
+      return await womenList.doc(uid).update({
+        'iine': iine,
+      });
+    }
+  }
+
   Future updateImage() async {
     await showImagePicker();
     await addImage();
@@ -301,25 +376,6 @@ class DatabaseService extends ChangeNotifier {
         'notifications': 0,
         'osirase': true,
         'iine': 0,
-      });
-    }
-  }
-
-  Future uploadIine(int? iine) async {
-    final doc =
-        await FirebaseFirestore.instance.collection('user').doc(uid).get();
-
-    await brewCollection.doc(uid).update({
-      'iine': iine,
-    });
-
-    if (doc['sex'] == 'men') {
-      return await menList.doc(uid).update({
-        'iine': iine,
-      });
-    } else {
-      return await womenList.doc(uid).update({
-        'iine': iine,
       });
     }
   }

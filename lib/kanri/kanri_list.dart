@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:machupichu/kanri/goiken_lists_screen.dart';
 import 'package:machupichu/kanri/kanri.dart';
 import 'package:machupichu/kanri/tuuhou_list.dart';
-import 'package:machupichu/services/database.dart';
-import 'package:machupichu/tuuhou/tuuhou.dart';
 
 class kanriListScreen extends StatefulWidget {
 
