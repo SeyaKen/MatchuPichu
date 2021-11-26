@@ -221,14 +221,14 @@ class DatabaseService extends ChangeNotifier {
     showImagePicker().then((valu) {
       randomUploadFile().then((value) async {
 
-        if (doc['sex'] == 'men') {
+        if (doc['sex'] == 'men' && value != '') {
           await brewCollection.doc(uid).update({
             "imageURL": FieldValue.arrayUnion([value])
           });
           await menList.doc(uid).update({
             "imageURL": FieldValue.arrayUnion([value])
           });
-        } else {
+        } else if(doc['sex'] == 'women' && value != '') {
           await brewCollection.doc(uid).update({
             "imageURL": FieldValue.arrayUnion([value])
           });
@@ -240,7 +240,7 @@ class DatabaseService extends ChangeNotifier {
     });
   }
 
-  Future profilePictureControll(DocumentSnapshot<Object?>? ds, int i) async {
+  Future profilePictureDelete(DocumentSnapshot<Object?>? ds, int i) async {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
 
@@ -318,7 +318,7 @@ class DatabaseService extends ChangeNotifier {
   // ファイルをアップロードする関数
   Future<String> randomUploadFile() async {
     if (imageFile == null) {
-      return 'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56';
+      return '';
     } else {
       final storage = FirebaseStorage.instance;
       final ref = storage.ref().child('images').child(randomAlphaNumeric(12));
