@@ -16,6 +16,7 @@ class _ImageListEditState extends State<ImageListEdit> {
   final picker = ImagePicker();
   Stream<QuerySnapshot<Object?>>? profileListsStream;
   DocumentSnapshot? ds;
+  int? listcount;
 
   String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -71,121 +72,213 @@ class _ImageListEditState extends State<ImageListEdit> {
                 ],
               )),
           resizeToAvoidBottomInset: false,
-          body: Stack(
-            alignment: Alignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: profileListsStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data != null) {
-                        this.ds = snapshot.data!.docs[0];
-                        print(snapshot.error);
-                      }
-                      return snapshot.hasData
-                          ? GridView.count(
-                              crossAxisCount: 2,
-                              childAspectRatio: 1,
-                              children:
-                                  List.generate(ds!['imageURL'].length, (i) {
-                                int check = i % 2;
-                                try {
-                                  return Center(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          left: check == 0 ? 5 : 0,
-                                          right: check == 1 ? 5 : 0),
+          body: SafeArea(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: profileListsStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          this.ds = snapshot.data!.docs[0];
+                          print(snapshot.error);
+                          ds!['imageURL'].length % 2 == 0
+                              ? this.listcount =
+                                  (ds!['imageURL'].length / 2 + 1).toInt()
+                              : this.listcount =
+                                  ((ds!['imageURL'].length - 1) / 2).toInt() +
+                                      1;
+                        }
+
+                        return snapshot.hasData && this.listcount != null
+                            ? ListView.builder(
+                                itemCount: this.listcount,
+                                itemBuilder: (BuildContext context, int i) {
+                                  try {
+                                    return Container(
                                       child: InkWell(
                                         onTap: () {},
                                         child: Column(
                                           children: [
-                                            ds!['imageURL'].isNotEmpty
-                                                ? Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.43,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.43,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      child: Image.network(
-                                                        ds!['imageURL'][i],
-                                                        fit: BoxFit.cover,
+                                            SizedBox(height: 20),
+                                            i != 0 &&
+                                                    i !=
+                                                        ds!['imageURL'].length -
+                                                            1
+                                                ? Center(
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.8,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child:
+                                                                  Image.network(
+                                                                ds!['imageURL']
+                                                                    [i * 2 - 1],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child:
+                                                                  Image.network(
+                                                                ds!['imageURL']
+                                                                    [i * 2],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   )
-                                                : Stack(
-                                                    children: [
-                                                      Container(
+                                                : i != 0 &&
+                                                        i * 2 - 1 ==
+                                                            ds!['imageURL']
+                                                                    .length -
+                                                                1
+                                                    ? Container(
                                                         width: MediaQuery.of(
                                                                     context)
                                                                 .size
                                                                 .width *
-                                                            0.43,
+                                                            0.8,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.35,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.35,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                child: Image
+                                                                    .network(
+                                                                  ds!['imageURL']
+                                                                      [i * 2 -
+                                                                          1],
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.8,
                                                         height: MediaQuery.of(
                                                                     context)
                                                                 .size
                                                                 .width *
-                                                            0.43,
-                                                        decoration:
-                                                            BoxDecoration(
+                                                            0.8,
+                                                        child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
-                                                          color: Colors.grey,
+                                                          child: Image.network(
+                                                            ds!['imageURL'][i],
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                      )
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  );
-                                } catch (e) {
-                                  return CupertinoActivityIndicator();
-                                }
-                              }),
-                            )
-                          : Center(child: CircularProgressIndicator());
-                    }),
-              ),
-              Positioned(
-                bottom: 50,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      try{
-                        await editService(uid).updateImage();
-                      }catch(e){
-                        print(e.toString());
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '写真を編集する',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Colors.white,
+                                    );
+                                  } catch (e) {
+                                    return Center();
+                                  }
+                                })
+                            : Center();
+                      }),
+                ),
+                Positioned(
+                  bottom: 50,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await editService(uid).updateImage();
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '写真を編集する',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFed1b24).withOpacity(0.77),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10000.0),
-                        ))),
-              ),
-            ],
+                      style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFed1b24).withOpacity(0.77),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10000.0),
+                          ))),
+                ),
+              ],
+            ),
           )),
     );
   }
