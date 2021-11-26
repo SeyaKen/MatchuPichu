@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:machupichu/domain/list.dart';
 import 'package:machupichu/settings/sousin.dart';
+import 'package:random_string/random_string.dart';
 
 class DatabaseService extends ChangeNotifier {
   final String uid;
@@ -174,42 +175,76 @@ class DatabaseService extends ChangeNotifier {
   Future profilePictureUpdate(DocumentSnapshot<Object?>? ds, int i) async {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
-
-    if(ds!['imageURL'][i] != 'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56') {
-      await FirebaseStorage.instance
-        .refFromURL(ds['imageURL'][i]).delete();
+    if (ds!['imageURL'][i] !=
+        'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56') {
+      await FirebaseStorage.instance.refFromURL(ds['imageURL'][i]).delete();
     }
+    showImagePicker().then((valu) {
+      randomUploadFile().then((value) async {
+        var val = [];
+        val.add('${ds['imageURL'][i]}');
 
-    var val = [];
-    val.add('${ds['imageURL'][i]}');
+        if (doc['sex'] == 'men') {
+          await brewCollection
+              .doc(uid)
+              .update({"imageURL": FieldValue.arrayRemove(val)});
+          await menList
+              .doc(uid)
+              .update({"imageURL": FieldValue.arrayRemove(val)});
+          await brewCollection.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+          await menList.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+        } else {
+          await brewCollection
+              .doc(uid)
+              .update({"imageURL": FieldValue.arrayRemove(val)});
+          await womenList
+              .doc(uid)
+              .update({"imageURL": FieldValue.arrayRemove(val)});
+          await brewCollection.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+          await womenList.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+        }
+      });
+    });
+  }
 
-    if (doc['sex'] == 'men') {
-      await brewCollection
-          .doc(uid)
-          .update({"imageURL": FieldValue.arrayRemove(val)});
-      await menList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
-      await brewCollection
-          .doc(uid)
-          .update({"imageURL": FieldValue.arrayUnion(  )});
-      await menList.doc(uid).update({"imageURL": FieldValue.arrayUnion(  )});
-    } else {
-      await brewCollection
-          .doc(uid)
-          .update({"imageURL": FieldValue.arrayRemove(val)});
-      await womenList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
-      await brewCollection
-          .doc(uid)
-          .update({"imageURL": FieldValue.arrayUnion(  )});
-      await womenList.doc(uid).update({"imageURL": FieldValue.arrayUnion(  )});
-    }
+  Future profilePictureAdd() async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+    showImagePicker().then((valu) {
+      randomUploadFile().then((value) async {
+
+        if (doc['sex'] == 'men') {
+          await brewCollection.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+          await menList.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+        } else {
+          await brewCollection.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+          await womenList.doc(uid).update({
+            "imageURL": FieldValue.arrayUnion([value])
+          });
+        }
+      });
+    });
   }
 
   Future profilePictureControll(DocumentSnapshot<Object?>? ds, int i) async {
     final doc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
 
-    await FirebaseStorage.instance
-        .refFromURL(ds!['imageURL'][i]).delete();
+    await FirebaseStorage.instance.refFromURL(ds!['imageURL'][i]).delete();
 
     var val = [];
     val.add('${ds['imageURL'][i]}');
@@ -218,12 +253,16 @@ class DatabaseService extends ChangeNotifier {
       await brewCollection
           .doc(uid)
           .update({"imageURL": FieldValue.arrayRemove(val)});
-      return await menList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+      return await menList
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
     } else {
       await brewCollection
           .doc(uid)
           .update({"imageURL": FieldValue.arrayRemove(val)});
-      return await womenList.doc(uid).update({"imageURL": FieldValue.arrayRemove(val)});
+      return await womenList
+          .doc(uid)
+          .update({"imageURL": FieldValue.arrayRemove(val)});
     }
   }
 
@@ -274,6 +313,24 @@ class DatabaseService extends ChangeNotifier {
       'imageURL': [imageURL],
     });
     fetchImage();
+  }
+
+  // ファイルをアップロードする関数
+  Future<String> randomUploadFile() async {
+    if (imageFile == null) {
+      return 'https://firebasestorage.googleapis.com/v0/b/machupichu-a5cd2.appspot.com/o/public%2FScreen%20Shot%202021-11-13%20at%2014.52.24.png?alt=media&token=d9099648-9870-4005-b3aa-387a8684dc56';
+    } else {
+      final storage = FirebaseStorage.instance;
+      final ref = storage.ref().child('images').child(randomAlphaNumeric(12));
+
+      final snapshot = await ref.putFile(
+        imageFile!,
+      );
+
+      final urlDownload = await snapshot.ref.getDownloadURL();
+
+      return urlDownload;
+    }
   }
 
   // ファイルをアップロードする関数
