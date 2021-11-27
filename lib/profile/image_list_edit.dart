@@ -83,44 +83,251 @@ class _ImageListEditState extends State<ImageListEdit> {
                     Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Text('画像を長押しすることで、画像を変更、削除することができます。')),
-                    SizedBox(height: 20),
                     Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: StreamBuilder<QuerySnapshot>(
-                            stream: profileListsStream,
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null) {
-                                this.ds = snapshot.data!.docs[0];
-                                print(snapshot.error);
-                                ds!['imageURL'].length % 2 == 0
-                                    ? this.listcount =
-                                        (ds!['imageURL'].length / 2 + 1).toInt()
-                                    : this.listcount =
-                                        ((ds!['imageURL'].length - 1) / 2)
-                                                .toInt() +
-                                            1;
-                              }
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream: profileListsStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.data != null) {
+                              this.ds = snapshot.data!.docs[0];
+                              print(snapshot.error);
+                              ds!['imageURL'].length % 2 == 0
+                                  ? this.listcount =
+                                      (ds!['imageURL'].length / 2 + 1).toInt()
+                                  : this.listcount =
+                                      ((ds!['imageURL'].length - 1) / 2)
+                                              .toInt() +
+                                          1;
+                            }
 
-                              return snapshot.hasData && this.listcount != null
-                                  ? ListView.builder(
-                                      itemCount: this.listcount,
-                                      itemBuilder:
-                                          (BuildContext context, int i) {
-                                        try {
-                                          return Container(
-                                            child: InkWell(
-                                              onTap: () {},
-                                              child: Column(
-                                                children: [
-                                                  SizedBox(height: 20),
-                                                  i != 0 &&
-                                                          i * 2 - 1 !=
-                                                              ds!['imageURL']
-                                                                      .length -
-                                                                  1
-                                                      ? Center(
-                                                          child: Container(
+                            return snapshot.hasData && this.listcount != null
+                                ? ListView.builder(
+                                    itemCount: this.listcount,
+                                    itemBuilder:
+                                        (BuildContext context, int i) {
+                                      try {
+                                        return Container(
+                                          child: InkWell(
+                                            onTap: () {},
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: 20),
+                                                i != 0 &&
+                                                        i * 2 - 1 !=
+                                                            ds!['imageURL']
+                                                                    .length -
+                                                                1
+                                                    ? Center(
+                                                        child: Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.8,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Stack(
+                                                                children: [
+                                                                  CupertinoContextMenu(
+                                                                    actions: [
+                                                                      CupertinoContextMenuAction(
+                                                                        child:
+                                                                            const Text('写真を変更する'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          DatabaseService(uid).profilePictureUpdate(ds, i * 2 - 1).then((val) {
+                                                                            Navigator.pop(context);
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                      CupertinoContextMenuAction(
+                                                                        child:
+                                                                            const Text('キャンセル'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                      ),
+                                                                      CupertinoContextMenuAction(
+                                                                        isDestructiveAction:
+                                                                            true,
+                                                                        child:
+                                                                            const Text('削除'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          DatabaseService(uid).profilePictureDelete(ds,
+                                                                              i * 2 - 1);
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              PageRouteBuilder(
+                                                                                pageBuilder: (_, __, ___) => ImageListEdit(),
+                                                                                transitionDuration: Duration(seconds: 0),
+                                                                              ));
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context).size.width *
+                                                                          0.35,
+                                                                      height: MediaQuery.of(context).size.width *
+                                                                          0.35,
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(5),
+                                                                        child:
+                                                                            Image.network(
+                                                                          ds!['imageURL'][i * 2 -
+                                                                              1],
+                                                                          fit:
+                                                                              BoxFit.cover,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    top: 10,
+                                                                    right: 10,
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () async {
+                                                                        DatabaseService(uid).profilePictureDelete(
+                                                                            ds,
+                                                                            i * 2 - 1);
+                                                                      },
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(1000)),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              30,
+                                                                          height:
+                                                                              30,
+                                                                          color:
+                                                                              Colors.white.withOpacity(0.5),
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.clear_rounded,
+                                                                            size: 25,
+                                                                            color: Color(0xFFed1b24).withOpacity(0.77),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              Stack(
+                                                                children: [
+                                                                  CupertinoContextMenu(
+                                                                    actions: [
+                                                                      CupertinoContextMenuAction(
+                                                                        child:
+                                                                            const Text('写真を変更する'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          DatabaseService(uid).profilePictureUpdate(ds, i * 2).then((val) {
+                                                                            Navigator.pop(context);
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                      CupertinoContextMenuAction(
+                                                                        child:
+                                                                            const Text('キャンセル'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                      ),
+                                                                      CupertinoContextMenuAction(
+                                                                        isDestructiveAction:
+                                                                            true,
+                                                                        child:
+                                                                            const Text('削除'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          DatabaseService(uid).profilePictureDelete(ds,
+                                                                              i * 2);
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              PageRouteBuilder(
+                                                                                pageBuilder: (_, __, ___) => ImageListEdit(),
+                                                                                transitionDuration: Duration(seconds: 0),
+                                                                              ));
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context).size.width *
+                                                                          0.35,
+                                                                      height: MediaQuery.of(context).size.width *
+                                                                          0.35,
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(5),
+                                                                        child:
+                                                                            Image.network(
+                                                                          ds!['imageURL'][i *
+                                                                              2],
+                                                                          fit:
+                                                                              BoxFit.cover,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    top: 10,
+                                                                    right: 10,
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () async {
+                                                                        DatabaseService(uid).profilePictureDelete(
+                                                                            ds,
+                                                                            i * 2);
+                                                                      },
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(1000)),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              30,
+                                                                          height:
+                                                                              30,
+                                                                          color:
+                                                                              Colors.white.withOpacity(0.5),
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.clear_rounded,
+                                                                            size: 25,
+                                                                            color: Color(0xFFed1b24).withOpacity(0.77),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : i != 0 &&
+                                                            i * 2 - 1 ==
+                                                                ds!['imageURL']
+                                                                        .length -
+                                                                    1
+                                                        ? Container(
                                                             width: MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -154,48 +361,45 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                                           },
                                                                         ),
                                                                         CupertinoContextMenuAction(
-                                                                          isDestructiveAction:
-                                                                              true,
-                                                                          child:
-                                                                              const Text('削除'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                            if (this.mounted) {
+                                                                            isDestructiveAction: true,
+                                                                            child: const Text('削除'),
+                                                                            onPressed: () {
                                                                               DatabaseService(uid).profilePictureDelete(ds, i * 2 - 1);
-                                                                            }
-                                                                          },
-                                                                        ),
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  PageRouteBuilder(
+                                                                                    pageBuilder: (_, __, ___) => ImageListEdit(),
+                                                                                    transitionDuration: Duration(seconds: 0),
+                                                                                  ));
+                                                                            }),
                                                                       ],
                                                                       child:
                                                                           Container(
-                                                                        width: MediaQuery.of(context).size.width *
-                                                                            0.35,
-                                                                        height: MediaQuery.of(context).size.width *
-                                                                            0.35,
+                                                                        width:
+                                                                            MediaQuery.of(context).size.width * 0.35,
+                                                                        height:
+                                                                            MediaQuery.of(context).size.width * 0.35,
                                                                         child:
                                                                             ClipRRect(
                                                                           borderRadius:
                                                                               BorderRadius.circular(5),
                                                                           child:
                                                                               Image.network(
-                                                                            ds!['imageURL'][i * 2 -
-                                                                                1],
-                                                                            fit:
-                                                                                BoxFit.cover,
+                                                                            ds!['imageURL'][i * 2 - 1],
+                                                                            fit: BoxFit.cover,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                     Positioned(
                                                                       top: 10,
-                                                                      right: 10,
+                                                                      right:
+                                                                          10,
                                                                       child:
                                                                           InkWell(
                                                                         onTap:
                                                                             () async {
-                                                                          DatabaseService(uid).profilePictureDelete(
-                                                                              ds,
+                                                                          DatabaseService(uid).profilePictureDelete(ds,
                                                                               i * 2 - 1);
                                                                         },
                                                                         child:
@@ -204,105 +408,10 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                                               BorderRadius.all(Radius.circular(1000)),
                                                                           child:
                                                                               Container(
-                                                                            width:
-                                                                                30,
-                                                                            height:
-                                                                                30,
-                                                                            color:
-                                                                                Colors.white.withOpacity(0.5),
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.clear_rounded,
-                                                                              size: 25,
-                                                                              color: Color(0xFFed1b24).withOpacity(0.77),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                Stack(
-                                                                  children: [
-                                                                    CupertinoContextMenu(
-                                                                      actions: [
-                                                                        CupertinoContextMenuAction(
-                                                                          child:
-                                                                              const Text('写真を変更する'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            DatabaseService(uid).profilePictureUpdate(ds, i * 2).then((val) {
-                                                                              Navigator.pop(context);
-                                                                            });
-                                                                          },
-                                                                        ),
-                                                                        CupertinoContextMenuAction(
-                                                                          child:
-                                                                              const Text('キャンセル'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                        ),
-                                                                        CupertinoContextMenuAction(
-                                                                          isDestructiveAction:
-                                                                              true,
-                                                                          child:
-                                                                              const Text('削除'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                            if (this.mounted) {
-                                                                              DatabaseService(uid).profilePictureDelete(ds, i * 2);
-                                                                            }
-                                                                          },
-                                                                        ),
-                                                                      ],
-                                                                      child:
-                                                                          Container(
-                                                                        width: MediaQuery.of(context).size.width *
-                                                                            0.35,
-                                                                        height: MediaQuery.of(context).size.width *
-                                                                            0.35,
-                                                                        child:
-                                                                            ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(5),
-                                                                          child:
-                                                                              Image.network(
-                                                                            ds!['imageURL'][i *
-                                                                                2],
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Positioned(
-                                                                      top: 10,
-                                                                      right: 10,
-                                                                      child:
-                                                                          InkWell(
-                                                                        onTap:
-                                                                            () async {
-                                                                          DatabaseService(uid).profilePictureDelete(
-                                                                              ds,
-                                                                              i * 2);
-                                                                        },
-                                                                        child:
-                                                                            ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(1000)),
-                                                                          child:
-                                                                              Container(
-                                                                            width:
-                                                                                30,
-                                                                            height:
-                                                                                30,
-                                                                            color:
-                                                                                Colors.white.withOpacity(0.5),
-                                                                            child:
-                                                                                Icon(
+                                                                            width: 30,
+                                                                            height: 30,
+                                                                            color: Colors.white.withOpacity(0.5),
+                                                                            child: Icon(
                                                                               Icons.clear_rounded,
                                                                               size: 25,
                                                                               color: Color(0xFFed1b24).withOpacity(0.77),
@@ -315,174 +424,72 @@ class _ImageListEditState extends State<ImageListEdit> {
                                                                 ),
                                                               ],
                                                             ),
-                                                          ),
-                                                        )
-                                                      : i != 0 &&
-                                                              i * 2 - 1 ==
-                                                                  ds!['imageURL']
-                                                                          .length -
-                                                                      1
-                                                          ? Container(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.8,
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Stack(
-                                                                    children: [
-                                                                      CupertinoContextMenu(
-                                                                        actions: [
-                                                                          CupertinoContextMenuAction(
-                                                                            child:
-                                                                                const Text('写真を変更する'),
-                                                                            onPressed:
-                                                                                () {
-                                                                              DatabaseService(uid).profilePictureUpdate(ds, i * 2 - 1).then((val) {
-                                                                                Navigator.pop(context);
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          CupertinoContextMenuAction(
-                                                                            child:
-                                                                                const Text('キャンセル'),
-                                                                            onPressed:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                          ),
-                                                                          CupertinoContextMenuAction(
-                                                                              isDestructiveAction: true,
-                                                                              child: const Text('削除'),
-                                                                              onPressed: () {
-                                                                                Navigator.pop(context);
-                                                                                if (this.mounted) {
-                                                                                  DatabaseService(uid).profilePictureDelete(ds, i * 2 - 1);
-                                                                                }
-                                                                              }),
-                                                                        ],
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              MediaQuery.of(context).size.width * 0.35,
-                                                                          height:
-                                                                              MediaQuery.of(context).size.width * 0.35,
-                                                                          child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(5),
-                                                                            child:
-                                                                                Image.network(
-                                                                              ds!['imageURL'][i * 2 - 1],
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Positioned(
-                                                                        top: 10,
-                                                                        right:
-                                                                            10,
-                                                                        child:
-                                                                            InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            DatabaseService(uid).profilePictureDelete(ds,
-                                                                                i * 2 - 1);
-                                                                          },
-                                                                          child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.all(Radius.circular(1000)),
-                                                                            child:
-                                                                                Container(
-                                                                              width: 30,
-                                                                              height: 30,
-                                                                              color: Colors.white.withOpacity(0.5),
-                                                                              child: Icon(
-                                                                                Icons.clear_rounded,
-                                                                                size: 25,
-                                                                                color: Color(0xFFed1b24).withOpacity(0.77),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          : Stack(
-                                                              children: [
-                                                                CupertinoContextMenu(
-                                                                  actions: [
-                                                                    CupertinoContextMenuAction(
-                                                                      child: const Text(
-                                                                          '写真を変更する'),
-                                                                      onPressed:
-                                                                          () {
-                                                                        DatabaseService(uid)
-                                                                            .profilePictureUpdate(ds,
-                                                                                i)
-                                                                            .then((val) {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    CupertinoContextMenuAction(
-                                                                      child: const Text(
-                                                                          'キャンセル'),
-                                                                      onPressed:
-                                                                          () {
+                                                          )
+                                                        : Stack(
+                                                            children: [
+                                                              CupertinoContextMenu(
+                                                                actions: [
+                                                                  CupertinoContextMenuAction(
+                                                                    child: const Text(
+                                                                        '写真を変更する'),
+                                                                    onPressed:
+                                                                        () {
+                                                                      DatabaseService(uid)
+                                                                          .profilePictureUpdate(ds,
+                                                                              i)
+                                                                          .then((val) {
                                                                         Navigator.pop(
                                                                             context);
-                                                                      },
-                                                                    ),
-                                                                  ],
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  CupertinoContextMenuAction(
+                                                                    child: const Text(
+                                                                        'キャンセル'),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.8,
+                                                                  height: MediaQuery.of(context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.8,
                                                                   child:
-                                                                      Container(
-                                                                    width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.8,
-                                                                    height: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.8,
-                                                                    child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5),
-                                                                      child: Image
-                                                                          .network(
-                                                                        ds!['imageURL']
-                                                                            [i],
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5),
+                                                                    child: Image
+                                                                        .network(
+                                                                      ds!['imageURL']
+                                                                          [i],
+                                                                      fit: BoxFit
+                                                                          .cover,
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            )
-                                                ],
-                                              ),
+                                                              ),
+                                                            ],
+                                                          )
+                                              ],
                                             ),
-                                          );
-                                        } catch (e) {
-                                          return Center();
-                                        }
-                                      })
-                                  : Center();
-                            }),
-                      ),
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        return Center();
+                                      }
+                                    })
+                                : Center();
+                          }),
                     ),
                   ],
                 ),
